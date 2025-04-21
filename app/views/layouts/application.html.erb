@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Software Management" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="csrf-token" content="<%= form_authenticity_token %>">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module", defer: true  %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <%#= javascript_importmap_tags %>
+    <%= javascript_include_tag "rails-ujs", "data-turbo-track": "reload" %>
+
+
+  </head>
+
+  <body class="d-flex flex-column min-vh-100">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-secondary rounded-bottom-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Главная</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><%= link_to 'Факультеты', faculties_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to 'Кафедры', cafedras_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to 'Компьютерные классы', comp_classes_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to 'ПО', installed_softwares_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to 'Заявки на ПО', request_softs_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to 'Пользователи', users_path, class: 'nav-link' %></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="container-fluid py-3 flex-grow-1">
+    <%= yield %>
+  </div>
+
+<!--  <div class="container-fluid ">-->
+  <footer class="bg-secondary text-center py-2 rounded-top-4 mt-auto">
+    <p class="link-light">Управление цифровых образовательных технологий</p>
+    <p class="link-underline-light">Телефон: +7 (495) 123-45-67</p>
+  </footer>
+<!--  </div>-->
+  </body>
+</html>
+
+
+<script>
+
+
+</script>

@@ -1,0 +1,6 @@
+document.getElementById("comp_classes").innerHTML = "<%= j(render partial: 'table', locals: { comp_classes: @comp_classes }) %>";
+document.getElementById("pagination-wrapper").innerHTML = "<%= j(paginate @comp_classes, params: request.query_parameters, remote: true) %>";
+
+// Обновляем ячейку с кнопками
+document.getElementById("comp-classes-actions-cell").innerHTML =
+    "<%= j render partial: 'actions_buttons', locals: { all_filtered: @all_filtered_comp_class_auds } %>";

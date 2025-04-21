@@ -1,0 +1,134 @@
+<%= search_form_for @q, url: cafedras_path, method: :get, html: { id: "search-form" }, remote: true do |f| %>
+  <%= hidden_field_tag :per_page, params[:per_page] %>
+
+  <div class="container mt-4">
+    <p style="color: green"><%= notice %></p>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">Кафедры</h1>
+      <%= link_to new_cafedra_path, class: 'btn btn-primary' do %>
+        <i class="bi bi-plus-lg"></i> Новая кафедра
+      <% end %>
+    </div>
+
+    <div class="card shadow">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0 table-striped align-middle">
+          <thead class="table-dark">
+          <tr class="text-center">
+            <th class="text-start"><%= sort_link(@q, :name, "Название кафедры", {}, { class: "text-light" }) %></th>
+            <th><%= sort_link(@q, :faculty_name, "Факультет", {}, { class: "text-light" }) %></th>
+            <th><%= sort_link(@q, :add_note, "Примечания", {}, { class: "text-light" }) %></th>
+            <th class="text-end">Действия</th>
+          </tr>
+          </thead>
+
+          <thead class="table-light">
+          <tr>
+            <th>
+              <%= f.search_field :name_cont, placeholder: "Название кафедры", class: "form-control form-control-sm auto-search", value: params.dig(:q, :name_cont) %>
+            </th>
+            <th>
+              <div class="dropdown w-100">
+                <button class="form-control form-control-sm dropdown-toggle text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <%= (params.dig(:q, :faculty_name_in)&.join(', ') || 'Фильтр факультетов') %>
+                </button>
+                <div class="dropdown-menu p-3 shadow w-100" style="max-height: 40vh; overflow-y: auto;">
+                  <input type="text" class="form-control form-control-sm mb-2" placeholder="Поиск..." id="faculty-filter-search">
+                  <% Faculty.order(:name).each do |faculty| %>
+                    <div class="form-check">
+                      <input class="form-check-input faculty-checkbox"
+                             type="checkbox"
+                             name="q[faculty_name_in][]"
+                             value="<%= faculty.name %>"
+                             id="faculty_<%= faculty.id %>"
+                             <%= Array(params.dig(:q, :faculty_name_in)).include?(faculty.name) ? 'checked' : '' %> >
+                      <label class="form-check-label" for="faculty_<%= faculty.id %>">
+                        <%= faculty.name %>
+                      </label>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </th>
+            <th>
+              <%= f.search_field :add_note_cont, placeholder: "Примечания", class: "form-control form-control-sm auto-search", value: params.dig(:q, :add_note_cont) %>
+            </th>
+
+            <!-- Кнопка сброса -->
+            <th class="text-end">
+              <div class="d-flex gap-2 align-content-end justify-content-end">
+                <%= link_to 'Очистить', request.path, class: 'btn btn-secondary btn-sm', data: { turbo_method: :get, turbo_action: :advance } %>
+              </div>
+            </th>
+          </tr>
+          </thead>
+
+          <tbody id="cafedras">
+          <% if @cafedras.any? %>
+            <%= render partial: "table", locals: { cafedras: @cafedras } %>
+          <% else %>
+            <tr>
+              <td colspan="4" class="text-center text-muted py-4">
+                Нет записей
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <div>
+        <div class="input-group input-group-sm">
+          <label class="input-group-text" for="per_page">Показать</label>
+          <select name="per_page" id="per_page" class="form-select form-select-sm" onchange="this.form.requestSubmit()">
+            <% [5, 10, 20, 50].each do |number| %>
+              <option value="<%= number %>" <%= @current_per_page.to_i == number ? 'selected' : '' %>><%= number %></option>
+            <% end %>
+          </select>
+          <span class="input-group-text">записей</span>
+        </div>
+      </div>
+
+      <div id="pagination-wrapper" class="d-flex justify-content-center mt-3">
+        <%= paginate @cafedras, params: request.query_parameters, remote: true %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Авто-поиск при вводе текста
+        document.querySelectorAll(".auto-search").forEach(input => {
+            input.addEventListener("input", function() {
+                clearTimeout(this.dataset.timer);
+                this.dataset.timer = setTimeout(() => {
+                    document.getElementById("search-form").requestSubmit();
+                }, 300);
+            });
+        });
+
+        // Фильтрация факультетов
+        const facultySearch = document.getElementById("faculty-filter-search");
+        if (facultySearch) {
+            facultySearch.addEventListener("input", function() {
+                const term = this.value.toLowerCase();
+                document.querySelectorAll('.dropdown-menu .form-check').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(term) ? 'block' : 'none';
+                });
+            });
+        }
+
+        // Автоотправка формы при выборе факультета
+        document.querySelectorAll(".faculty-checkbox").forEach(checkbox => {
+            checkbox.addEventListener("change", () => {
+                document.getElementById("search-form").requestSubmit();
+            });
+        });
+    });
+</script>

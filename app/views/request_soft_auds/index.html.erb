@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Request soft auds" %>
+
+<h1>Request soft auds</h1>
+
+<div id="request_soft_auds">
+  <% @request_soft_auds.each do |request_soft_aud| %>
+    <%= render request_soft_aud %>
+    <p>
+      <%= link_to "Show this request soft aud", request_soft_aud %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New request soft aud", new_request_soft_aud_path %>

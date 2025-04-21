@@ -1,0 +1,303 @@
+<%= search_form_for @q, url: installed_softwares_path, method: :get, html: { id: "search-form" }, remote: true do |f| %>
+  <%= hidden_field_tag :per_page, params[:per_page] %>
+  <%= hidden_field_tag "q[s]", params.dig(:q, :s), id: "sort-order" %>
+
+  <div class="container mt-4">
+
+  <p style="color: green"><%= notice %></p>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Программное обеспечение</h1>
+    <%= link_to new_installed_software_path, class: 'btn btn-primary' do %>
+      <i class="bi bi-plus-lg"></i> Добавить
+    <% end %>
+  </div>
+
+  <div class="mb-3">
+    <span class="badge bg-danger">Просрочено</span>
+    <span class="badge bg-warning text-dark">Истекает в течение 3 месяцев</span>
+  </div>
+
+  <div class="card shadow">
+    <div class="card-body p-0">
+
+
+<!--        <div class="table-responsive">-->
+          <table class="table table-hover mb-0">
+            <thead class="table-dark">
+            <tr class="text-center">
+<!--              <th><%#= sort_link(@q, :name, "Название ПО", {}, { class: "text-light" }) %></th>-->
+<!--              <th><%#= sort_link(@q, :version, "Версия", {}, { class: "text-light" }) %></th>-->
+              <th>
+                <%= link_to "#", class: "text-light sort-link d-inline-flex align-items-center", data: { sort: "name" } do %>
+                  Название ПО
+                  <i class="ms-1 bi" data-sort-field="name"></i>
+                <% end %>
+              </th>
+              <th>
+                <%= link_to "#", class: "text-light sort-link d-inline-flex align-items-center", data: { sort: "version" } do %>
+                  Версия
+                  <i class="ms-1 bi" data-sort-field="version"></i>
+                <% end %>
+              </th>
+              <th>Срок лицензии</th>
+              <th>Аудитории</th>
+              <th class="text-end">Действия</th>
+            </tr>
+
+            </thead>
+
+            <thead class="table-light">
+            <tr>
+              <th>
+                <%= f.search_field :name_cont, placeholder: "Поиск", class: "form-control form-control-sm auto-search" %>
+              </th>
+              <th>
+                <%= f.search_field :version_cont, placeholder: "Поиск", class: "form-control form-control-sm auto-search" %>
+              </th>
+              <!--фильтр по периоду действия-->
+              <th>
+                <div class="dropdown w-100">
+                  <button class="form-control form-control-sm dropdown-toggle text-start"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                    <%= (params.dig(:q, :start_date_gteq).presence || params.dig(:q, :finish_date_lteq).presence || params.dig(:q, :finish_date_filter).presence) ? 'Фильтр по дате' : 'Фильтр по дате' %>
+                  </button>
+
+                  <div class="dropdown-menu p-3 shadow w-100" style="min-width: 300px;">
+                    <div class="mb-2">
+                      <label class="form-label small">Период действия</label>
+                      <div class="input-group input-group-sm mb-2">
+                        <span class="input-group-text">от</span>
+                        <%= f.search_field :start_date_gteq, class: "form-control form-control-sm auto-search", type: "date" %>
+                        <span class="input-group-text">до</span>
+                        <%= f.search_field :finish_date_lteq, class: "form-control form-control-sm auto-search", type: "date" %>
+                      </div>
+                    </div>
+
+                    <div class="mb-2">
+                      <label class="form-label small">Быстрые фильтры</label>
+                      <% date_filters = {
+                        '' => 'Все',
+                        'today' => 'Сегодня',
+                        'this_month' => 'В этом месяце',
+                        'this_year' => 'В этом году',
+                        'expired' => 'Просроченные'
+                      } %>
+
+                      <% date_filters.each do |value, label| %>
+                        <div class="form-check">
+                          <%= f.radio_button :finish_date, value, id: "filter_#{value}", class: "form-check-input auto-submit" %>
+                          <%= f.label "filter_#{value}", label, class: "form-check-label" %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </th>
+
+              <!--Фильтр по аудиториям-->
+              <th class="start">
+                <div class="dropdown w-100">
+                  <button class="form-control form-control-sm dropdown-toggle text-start"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                    <%= (params.dig(:q, :comp_classes_aud_number_in)&.join(', ') || 'Фильтр по аудиториям') %>
+                  </button>
+                  <div class="dropdown-menu p-3 shadow w-100" style="max-height: 40vh; overflow-y: auto;" id="aud-dropdown">
+                    <input type="text" class="form-control form-control-sm mb-2 auto-search" placeholder="Поиск..." id="aud-filter-search">
+                    <div class="form-check">
+                      <input class="form-check-input aud-checkbox"
+                             type="checkbox"
+                             name="q[without_classes]"
+                             value="true"
+                             id="aud_none"
+                             <%= params.dig(:q, :comp_classes_id_null) == "true" ? 'checked' : '' %>>
+                      <label class="form-check-label" for="aud_none">
+                        Не установлено
+                      </label>
+                    </div>
+
+                    <% CompClass.order(:aud_number).distinct.pluck(:aud_number).each do |aud| %>
+                      <div class="form-check">
+                        <input class="form-check-input aud-checkbox"
+                               type="checkbox"
+                               name="q[comp_classes_aud_number_in][]"
+                               value="<%= aud %>"
+                               id="aud_<%= aud %>"
+                        <%= Array(params.dig(:q, :comp_classes_aud_number_in)).include?(aud) ? 'checked' : '' %>
+                        <label class="form-check-label" for="aud_<%= aud %>">
+                          <%= aud %>
+                        </label>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </th>
+
+              <th class="text-end">
+                <div class="d-flex gap-2 align-content-end justify-content-end">
+                  <%#= link_to 'Очистить', request.path, class: 'btn btn-secondary btn-sm', data: { turbo_method: :get, turbo_action: :advance } %>
+                  <%= button_tag 'Очистить', type: 'button', class: 'btn btn-secondary btn-sm', id: 'reset-filters' %>
+
+                </div>
+              </th>
+            </tr>
+            </thead>
+
+            <tbody id="softwares">
+            <%= render partial: "table", locals: { installed_software: @installed_software } %>
+            </tbody>
+          </table>
+<!--        </div>-->
+
+
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <div>
+      <div class="input-group input-group-sm">
+        <label class="input-group-text" for="per_page">Показать</label>
+        <select name="per_page" id="per_page" class="form-select form-select-sm" onchange="this.form.requestSubmit()">
+          <% [5, 10, 20, 50].each do |number| %>
+            <option value="<%= number %>" <%= @current_per_page.to_i == number ? 'selected' : '' %>><%= number %></option>
+          <% end %>
+        </select>
+        <span class="input-group-text">записей</span>
+      </div>
+    </div>
+
+    <div id="pagination-wrapper" class="d-flex justify-content-center mt-3">
+      <%= paginate @installed_software, params: request.query_parameters, remote: true %>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".auto-search").forEach((input) => {
+            input.addEventListener("input", function () {
+                clearTimeout(this.dataset.timer);
+                this.dataset.timer = setTimeout(() => {
+                    document.getElementById("search-form").requestSubmit();
+                }, 300);
+            });
+        });
+
+        document.querySelectorAll('.auto-submit').forEach(el => {
+            el.addEventListener('change', () => {
+                const form = document.getElementById('search-form');
+                if (form) Rails.fire(form, 'submit');
+            });
+        });
+
+        const audSearch = document.getElementById("aud-filter-search");
+        if (audSearch) {
+            audSearch.addEventListener("input", function() {
+                const term = this.value.toLowerCase();
+                document.querySelectorAll('.dropdown-menu .form-check').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(term) ? 'block' : 'none';
+                });
+            });
+        }
+
+        document.querySelectorAll(".aud-checkbox").forEach(checkbox => {
+            checkbox.addEventListener("change", () => {
+                document.getElementById("search-form").requestSubmit();
+            });
+        });
+
+        document.querySelectorAll("a[data-sort]").forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                const sortField = this.dataset.sort;
+                const sortInput = document.getElementById("sort-order");
+                let current = sortInput.value;
+
+                // Логика циклической сортировки: none → asc → desc → none
+                const asc = `${sortField} asc`;
+                const desc = `${sortField} desc`;
+
+                if (current === asc) {
+                    sortInput.value = desc;
+                } else if (current === desc) {
+                    sortInput.value = "";
+                } else {
+                    sortInput.value = asc;
+                }
+
+                document.getElementById("search-form").requestSubmit();
+            });
+        });
+
+        document.getElementById("reset-filters")?.addEventListener("click", function () {
+            const form = document.getElementById("search-form");
+            if (!form) return;
+
+            // Очистка текстовых и поисковых полей
+            form.querySelectorAll("input[type='text'], input[type='date'], input[type='search']").forEach(input => {
+                input.value = "";
+            });
+
+            // Очистка чекбоксов и радиокнопок
+            form.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach(input => {
+                input.checked = false;
+            });
+
+            // Удаление сортировки (q[s])
+            const sortInput = form.querySelector("input[name='q[s]']");
+            if (sortInput) sortInput.value = "";
+
+            // Отправка формы
+            form.requestSubmit();
+        });
+
+        function updateSortIcons() {
+            const sortValue = document.getElementById("sort-order")?.value;
+            document.querySelectorAll("i[data-sort-field]").forEach(icon => {
+                const field = icon.dataset.sortField;
+                icon.classList.remove("bi-caret-up-fill", "bi-caret-down-fill");
+
+                if (sortValue === `${field} asc`) {
+                    icon.classList.add("bi-caret-up-fill");
+                } else if (sortValue === `${field} desc`) {
+                    icon.classList.add("bi-caret-down-fill");
+                }
+            });
+        }
+
+        updateSortIcons(); // при загрузке
+
+        document.querySelectorAll("a[data-sort]").forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                const sortField = this.dataset.sort;
+                const sortInput = document.getElementById("sort-order");
+                let current = sortInput.value;
+
+                const asc = `${sortField} asc`;
+                const desc = `${sortField} desc`;
+
+                if (current === asc) {
+                    sortInput.value = desc;
+                } else if (current === desc) {
+                    sortInput.value = "";
+                } else {
+                    sortInput.value = asc;
+                }
+
+                updateSortIcons();
+
+                document.getElementById("search-form").requestSubmit();
+            });
+        });
+
+    });
+</script>

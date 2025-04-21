@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Request softs" %>
+
+<h1>Request softs</h1>
+
+<div id="request_softs">
+  <% @request_softs.each do |request_soft| %>
+    <%= render request_soft %>
+    <p>
+      <%= link_to "Show this request soft", request_soft %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New request soft", new_request_soft_path %>

@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  soft_name: MyString
+  version: MyString
+  count: 1
+  price: 9.99
+  contact: MyText
+  cafedra: one
+
+two:
+  soft_name: MyString
+  version: MyString
+  count: 1
+  price: 9.99
+  contact: MyText
+  cafedra: two

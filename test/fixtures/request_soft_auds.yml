@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  request_soft: one
+  comp_class: one
+
+two:
+  request_soft: two
+  comp_class: two

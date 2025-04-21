@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @request_soft %>
+
+<div>
+  <%= link_to "Edit this request soft", edit_request_soft_path(@request_soft) %> |
+  <%= link_to "Back to request softs", request_softs_path %>
+
+  <%= button_to "Destroy this request soft", @request_soft, method: :delete %>
+</div>

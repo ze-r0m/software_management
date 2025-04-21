@@ -1,0 +1,148 @@
+<%= form_with(model: installed_software, local: true) do |form| %>
+  <% if installed_software.errors.any? %>
+    <div class="alert alert-danger">
+      <h4>Ошибки:</h4>
+      <ul>
+        <% installed_software.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div class="card shadow">
+    <div class="card-body">
+      <div class="mb-3">
+        <%= form.label :name, 'Название ПО', class: 'form-label' %>
+        <%= form.text_field :name, class: 'form-control', required: true %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :version, 'Версия', class: 'form-label' %>
+        <%= form.text_field :version, class: 'form-control', required: true %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :start_date, 'Дата начала действия лицензии', class: 'form-label' %>
+        <%= form.date_field :start_date, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :finish_date, 'Дата окончания лицензии', class: 'form-label' %>
+        <%= form.date_field :finish_date, class: 'form-control' %>
+      </div>
+
+
+<!--      <div class="mb-3">-->
+        <%#= form.label :comp_class_ids, 'Аудитории, где установлено ПО', class: 'form-label' %>
+        <%#= form.collection_check_boxes :comp_class_ids, CompClass.all, :id, :aud_number do |b| %>
+<!--          <div class="form-check">-->
+            <%#= b.check_box(class: "form-check-input") %>
+            <%#= b.label(class: "form-check-label") %>
+<!--          </div>-->
+        <%# end %>
+<!--      </div>-->
+
+
+<!--      Если ни одну аудиторию не добавили-->
+      <%#= hidden_field_tag "installed_software[comp_class_ids][]", "" %>
+
+<!--      Вывод аудиторий-->
+      <%# CompClass.all.each do |aud| %>
+<!--        <div class="form-check">-->
+          <%#= check_box_tag 'installed_software[comp_class_ids][]', aud.id, @installed_software.comp_class_ids.include?(aud.id), class: 'form-check-input', id: "aud#{aud.id}" %>
+          <%#= label_tag "aud#{aud.id}", aud.aud_number, class: 'form-check-label' %>
+<!--        </div>-->
+      <%# end %>
+
+
+
+      <div class="mb-3">
+        <label class="form-label">Аудитории, где установлено ПО</label>
+        <!-- Скрытое поле, чтобы можно было полностью удалить связи -->
+        <%= hidden_field_tag "installed_software[comp_class_ids][]", "" %>
+
+        <div class="row">
+          <div class="col-6">
+            <!-- Выпадающий список -->
+            <div class="input-group mt-2">
+              <%= select_tag :aud_selector, options_from_collection_for_select(CompClass.all - @installed_software.comp_classes, :id, :aud_number),
+                             prompt: "Выберите аудиторию",
+                             class: "form-select",
+                             id: "aud-selector" %>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <!-- Контейнер с уже выбранными -->
+            <div id="selected-auditoriums">
+              <% @installed_software.comp_classes.each do |aud| %>
+                <span class="badge bg-success me-1 mb-1 d-inline-flex align-items-center">
+                  <%= aud.aud_number %>
+                  <button type="button" class="btn-close btn-close-white btn-sm ms-2 remove-aud" aria-label="Удалить"
+                          data-id="<%= aud.id %>" data-name="<%= aud.aud_number %>"></button>
+                  <%= hidden_field_tag "installed_software[comp_class_ids][]", aud.id %>
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2">
+        <%= link_to 'Отмена', installed_softwares_path, class: 'btn btn-secondary' %>
+        <%= form.submit "Сохранить", class: 'btn btn-primary' %>
+      </div>
+
+    </div>
+  </div>
+<% end %>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selector = document.getElementById("aud-selector");
+        const container = document.getElementById("selected-auditoriums");
+
+        selector.addEventListener("change", function () {
+            const selectedOption = selector.options[selector.selectedIndex];
+            const audId = selectedOption.value;
+            const audName = selectedOption.text;
+
+            if (!audId) return;
+
+            // Создаем бейдж
+            const badge = document.createElement("span");
+            badge.className = "badge bg-success me-1 mb-1 d-inline-flex align-items-center";
+            badge.innerHTML = `
+        ${audName}
+        <button type="button" class="btn-close btn-close-white btn-sm ms-2 remove-aud"
+                aria-label="Удалить" data-id="${audId}" data-name="${audName}"></button>
+        <input type="hidden" name="installed_software[comp_class_ids][]" value="${audId}">
+      `;
+            container.appendChild(badge);
+
+            // Удаляем из select
+            selector.remove(selector.selectedIndex);
+            selector.selectedIndex = 0; // сбрасываем выбор
+        });
+
+        // Удаление бейджа и возврат в select
+        container.addEventListener("click", function (e) {
+            if (e.target.classList.contains("remove-aud")) {
+                const badge = e.target.closest("span");
+                const id = e.target.dataset.id;
+                const name = e.target.dataset.name;
+
+                // Вернём обратно в select
+                const option = document.createElement("option");
+                option.value = id;
+                option.text = name;
+                selector.add(option);
+
+                badge.remove();
+            }
+        });
+    });
+</script>

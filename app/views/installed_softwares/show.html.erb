@@ -1,0 +1,59 @@
+<div class="container mt-4">
+
+  <p style="color: green"><%= notice %></p>
+
+  <div class="card shadow">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h2 class="mb-0"><%= @installed_software.name %></h2>
+      <%= link_to installed_softwares_path, class: 'btn btn-secondary' do %>
+        <i class="bi bi-arrow-left"></i> Назад
+      <% end %>
+    </div>
+
+
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <h5 class="text-muted">Информация о ПО</h5>
+          <dl class="row">
+            <dt class="col-sm-4">Название:</dt>
+            <dd class="col-sm-8"><%= @installed_software.name %></dd>
+
+            <dt class="col-sm-4">Версия</dt>
+            <dd class="col-sm-8"><%= @installed_software.version %></dd>
+
+            <dt class="col-sm-4">Период действия:</dt>
+            <dd class="col-sm-8">
+              <% if @installed_software.start_date && @installed_software.finish_date %>
+                <%= @installed_software.start_date.strftime('%d.%m.%Y') %> — <%= @installed_software.finish_date.strftime('%d.%m.%Y') %>
+              <% else %>
+                <em>Без срока</em>
+              <% end %><br>
+
+            </dd>
+
+            <dt class="col-sm-4">Установлено в аудиториях:</dt>
+            <dd class="col-sm-8"><% if @installed_software.comp_classes.any? %>
+                <% @installed_software.comp_classes.each do |aud| %>
+                  <span class="badge bg-success"><%= aud.aud_number %></span>
+                <% end %>
+              <% else %>
+                <em>Не установлено</em>
+              <% end %></dd>
+
+          </dl>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <%= link_to edit_installed_software_path(@installed_software), class: 'btn btn-primary' do %>
+          <i class="bi bi-pencil"></i> Редактировать
+        <% end %>
+        <%= link_to 'Удалить', @installed_software,
+                    method: :delete,
+                    data: { confirm: 'Вы уверены?' },
+                    class: 'btn btn-danger' %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,2 @@
+module CompClassesHelper
+end

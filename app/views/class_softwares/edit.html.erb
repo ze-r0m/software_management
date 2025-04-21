@@ -1,0 +1,12 @@
+<% content_for :title, "Editing class software" %>
+
+<h1>Editing class software</h1>
+
+<%= render "form", class_software: @class_software %>
+
+<br>
+
+<div>
+  <%= link_to "Show this class software", @class_software %> |
+  <%= link_to "Back to class softwares", class_softwares_path %>
+</div>

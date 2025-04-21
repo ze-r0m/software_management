@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  aud_number: MyString
+  count_seat: 1
+  count_comp_seat: 1
+  count_comp: 1
+  spec_purpose: MyText
+  projector: false
+  panel: false
+  ch_board: false
+  add_note: MyText
+  cafedra: one
+
+two:
+  aud_number: MyString
+  count_seat: 1
+  count_comp_seat: 1
+  count_comp: 1
+  spec_purpose: MyText
+  projector: false
+  panel: false
+  ch_board: false
+  add_note: MyText
+  cafedra: two

@@ -1,0 +1,78 @@
+<%= form_with(model: comp_class) do |form| %>
+  <% if comp_class.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(comp_class.errors.count, "ошибка") %> запрещают сохранение:</h4>
+      <ul>
+        <% comp_class.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="card shadow">
+    <div class="card-body">
+      <div class="row">
+        <!-- Левая колонка -->
+        <div class="col-md-6">
+          <h5 class="mb-3 text-muted">Основная информация</h5>
+
+          <div class="mb-3">
+            <%= form.label :aud_number, 'Номер аудитории', class: 'form-label' %>
+            <%= form.text_field :aud_number, class: 'form-control' %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :cafedra_id, 'Кафедра', class: 'form-label' %>
+            <%= form.collection_select :cafedra_id, Cafedra.all, :id, :name, {}, { class: 'form-select' } %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :count_seat, 'Посадочных мест', class: 'form-label' %>
+            <%= form.number_field :count_seat, class: 'form-control' %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :count_comp, 'Компьютеров', class: 'form-label' %>
+            <%= form.number_field :count_comp, class: 'form-control' %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :count_comp_seat, 'Мест за компьютерами', class: 'form-label' %>
+            <%= form.number_field :count_comp_seat, class: 'form-control' %>
+          </div>
+        </div>
+
+        <!-- Правая колонка -->
+        <div class="col-md-6">
+          <h5 class="mb-3 text-muted">Оборудование</h5>
+
+          <div class="form-check mb-2">
+            <%= form.check_box :projector, class: 'form-check-input' %>
+            <%= form.label :projector, 'Есть проектор', class: 'form-check-label' %>
+          </div>
+
+          <div class="form-check mb-2">
+            <%= form.check_box :panel, class: 'form-check-input' %>
+            <%= form.label :panel, 'Есть панель', class: 'form-check-label' %>
+          </div>
+
+          <div class="form-check mb-3">
+            <%= form.check_box :ch_board, class: 'form-check-input' %>
+            <%= form.label :ch_board, 'Есть меловая доска', class: 'form-check-label' %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :spec_purpose, 'Специальное назначение', class: 'form-label' %>
+            <%= form.text_area :spec_purpose, class: 'form-control', rows: 5 %>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2">
+        <%= link_to 'Отмена', faculties_path, class: 'btn btn-secondary' %>
+        <%= form.submit "Сохранить", class: 'btn btn-primary' %>
+      </div>
+    </div>
+  </div>
+<% end %>

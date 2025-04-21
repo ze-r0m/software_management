@@ -1,0 +1,38 @@
+<%= form_with(model: cafedra) do |form| %>
+  <% if cafedra.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(cafedra.errors.count, "error") %> запрещают сохранение:</h4>
+      <ul>
+        <% cafedra.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="card shadow">
+    <div class="card-body">
+      <div class="mb-3">
+        <%= form.label :name, "Название кафедры", class: 'form-label' %>
+        <%= form.text_field :name, class: 'form-control', required: true %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :faculty_id, "Факультет", class: 'form-label' %>
+        <%= form.collection_select :faculty_id, Faculty.all, :id, :name,
+                                   { prompt: "Выберите факультет" },
+                                   { class: 'form-select', required: true } %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :add_note, "Примечания", class: 'form-label' %>
+        <%= form.text_area :add_note, class: 'form-control', rows: 3 %>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2">
+        <%= link_to 'Отмена', cafedras_path, class: 'btn btn-secondary' %>
+        <%= form.submit "Сохранить", class: 'btn btn-primary' %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,10 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Редактирование ПО</h1>
+    <%= link_to @installed_software, class: 'btn btn-secondary' do %>
+      <i class="bi bi-arrow-left"></i> Назад
+    <% end %>
+  </div>
+
+  <%= render "form", installed_software: @installed_software %>
+</div>

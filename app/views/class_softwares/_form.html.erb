@@ -1,0 +1,27 @@
+<%= form_with(model: class_software) do |form| %>
+  <% if class_software.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(class_software.errors.count, "error") %> prohibited this class_software from being saved:</h2>
+
+      <ul>
+        <% class_software.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :comp_class_id, style: "display: block" %>
+    <%= form.text_field :comp_class_id %>
+  </div>
+
+  <div>
+    <%= form.label :installed_software_id, style: "display: block" %>
+    <%= form.text_field :installed_software_id %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

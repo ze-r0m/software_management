@@ -1,0 +1,10 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Редактирование компьютерного класса</h1>
+    <%= link_to @comp_class, class: 'btn btn-secondary' do %>
+      <i class="bi bi-arrow-left"></i> Назад
+    <% end %>
+  </div>
+
+  <%= render 'form', comp_class: @comp_class %>
+</div>

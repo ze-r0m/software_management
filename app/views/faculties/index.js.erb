@@ -1,0 +1,2 @@
+document.getElementById("faculties").innerHTML = "<%= j(render partial: 'table', locals: { faculties: @faculties }) %>";
+document.getElementById("pagination-wrapper").innerHTML = "<%= j(paginate @faculties, params: request.query_parameters, remote: true) %>";

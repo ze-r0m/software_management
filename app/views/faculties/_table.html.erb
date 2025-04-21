@@ -1,0 +1,24 @@
+<% @faculties.each do |faculty| %>
+  <tr>
+    <td><%= faculty.name %></td>
+    <td><%= faculty.add_note %></td>
+    <td class="text-end">
+      <div class="d-inline-flex gap-2">
+        <%= link_to faculty, class: 'text-decoration-none text-primary', title: 'Просмотр', data: { bs_toggle: "tooltip" } do %>
+          <i class="bi bi-eye"></i>
+        <% end %>
+
+        <%= link_to edit_faculty_path(faculty), class: 'text-decoration-none text-secondary', title: 'Редактировать', data: { bs_toggle: "tooltip" } do %>
+          <i class="bi bi-pencil"></i>
+        <% end %>
+
+        <%= link_to faculty_path(faculty), method: :delete,
+                    data: { confirm: 'Вы уверены?', bs_toggle: "tooltip" },
+                    class: 'text-decoration-none text-danger', title: 'Удалить' do %>
+          <i class="bi bi-trash"></i>
+        <% end %>
+      </div>
+    </td>
+
+  </tr>
+<% end %>

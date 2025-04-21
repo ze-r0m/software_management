@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @class_software %>
+
+<div>
+  <%= link_to "Edit this class software", edit_class_software_path(@class_software) %> |
+  <%= link_to "Back to class softwares", class_softwares_path %>
+
+  <%= button_to "Destroy this class software", @class_software, method: :delete %>
+</div>
