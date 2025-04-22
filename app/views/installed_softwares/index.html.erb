@@ -42,6 +42,7 @@
               </th>
               <th>Срок лицензии</th>
               <th>Аудитории</th>
+              <th>Держатель ключа</th>
               <th class="text-end">Действия</th>
             </tr>
 
@@ -135,6 +136,10 @@
                     <% end %>
                   </div>
                 </div>
+              </th>
+
+              <th>
+                <%= f.search_field :keyholder_cont, placeholder: "Поиск", class: "form-control form-control-sm auto-search" %>
               </th>
 
               <th class="text-end">

@@ -91,7 +91,14 @@ class InstalledSoftwaresController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-    def installed_software_params
-      params.require(:installed_software).permit(:name, :version, :start_date, :finish_date, comp_class_ids:[])
-    end
+  def installed_software_params
+    params[:installed_software][:comp_class_ids].reject!(&:blank?) if params[:installed_software][:comp_class_ids]
+
+    params.require(:installed_software).permit(
+      :name, :note, :version, :is_server,
+      :start_date, :finish_date, :key_holder,
+      comp_class_ids: []
+    )
+  end
+
 end

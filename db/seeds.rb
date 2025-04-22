@@ -129,39 +129,41 @@ end
 
 puts "Создание установленного ПО..."
 software_list = [
-  ['Microsoft Office', '2021', Date.new(2023, 1, 1), Date.new(2025, 12, 31)],
-  ['Adobe Photoshop', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31)],
-  ['Visual Studio', '2022', Date.new(2024, 1, 1), Date.new(2026, 12, 31)],
-  ['AutoCAD', '2024', Date.new(2024, 3, 1), Date.new(2025, 12, 31)],
-  ['Blender', '3.6', Date.new(2023, 5, 1), Date.new(2025, 5, 1)],
-  ['MATLAB', 'R2023b', Date.new(2023, 9, 1), Date.new(2026, 8, 31)],
-  ['LibreOffice', '7.6', Date.new(2024, 2, 1), Date.new(2025, 12, 31)],
-  ['MySQL', '8.0', Date.new(2023, 2, 1), Date.new(2026, 1, 31)],
-  ['PostgreSQL', '15.0', Date.new(2024, 1, 1), Date.new(2027, 12, 31)],
-  ['Microsoft Access', '2021', Date.new(2023, 1, 1), Date.new(2025, 12, 31)],
-  ['Microsoft Project', '2021', Date.new(2023, 1, 1), Date.new(2025, 12, 31)],
-  ['Microsoft Visio', '2021', Date.new(2023, 1, 1), Date.new(2025, 12, 31)],
-  ['Microsoft SQL Server', '2022', Date.new(2024, 1, 1), Date.new(2026, 12, 31)],
-  ['Adobe Premiere Pro', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31)],
-  ['Adobe After Effects', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31)],
-  ['Adobe InDesign', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31)],
-  ['Adobe Dreamweaver', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31)],
-  ['Adobe Audition', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31)],
-  ['Adobe Bridge', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31)],
-  # ПО с истекшими лицензиями
-  ['Adobe Illustrator', 'CC 2022', Date.new(2022, 1, 1), Date.new(2023, 12, 31)],
-  ['CorelDRAW', '2022', Date.new(2021, 6, 1), Date.new(2023, 6, 1)],
-  ['SketchUp', '2021', Date.new(2020, 5, 1), Date.new(2023, 5, 1)],
-  ['3ds Max', '2021', Date.new(2021, 1, 1), Date.new(2023, 1, 1)],
-  ['Cinema 4D', 'R23', Date.new(2021, 3, 1), Date.new(2023, 3, 1)],
+  ['Microsoft Office', '2021', Date.new(2023, 1, 1), Date.new(2025, 12, 31), 'Иванов И.И.', false, 'офис'],
+  ['Adobe Photoshop', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31), 'Дизайн-отдел', false, 'дизайн'],
+  ['Visual Studio', '2022', Date.new(2024, 1, 1), Date.new(2026, 12, 31), 'Петров П.П.', false, 'dev'],
+  ['AutoCAD', '2024', Date.new(2024, 3, 1), Date.new(2025, 12, 31), 'Архитектура', false, 'cad'],
+  ['Blender', '3.6', Date.new(2023, 5, 1), Date.new(2025, 5, 1), '3D-отдел', false, '3d'],
+  ['MATLAB', 'R2023b', Date.new(2023, 9, 1), Date.new(2026, 8, 31), 'Лаб. моделирования', false, 'наука'],
+  ['LibreOffice', '7.6', Date.new(2024, 2, 1), Date.new(2025, 12, 31), 'Бухгалтерия', false, 'офис'],
+  ['MySQL', '8.0', Date.new(2023, 2, 1), Date.new(2026, 1, 31), 'Сисадмин', true, 'сервер'],
+  ['PostgreSQL', '15.0', Date.new(2024, 1, 1), Date.new(2027, 12, 31), 'DevOps', true, 'сервер'],
+  ['Microsoft Access', '2021', Date.new(2023, 1, 1), Date.new(2025, 12, 31), 'База данных', false, 'db'],
+  ['Microsoft Project', '2021', Date.new(2023, 1, 1), Date.new(2025, 12, 31), 'Планировщик', false, 'план'],
+  ['Microsoft Visio', '2021', Date.new(2023, 1, 1), Date.new(2025, 12, 31), 'Аналитик', false, 'схемы'],
+  ['Microsoft SQL Server', '2022', Date.new(2024, 1, 1), Date.new(2026, 12, 31), 'DBA', true, 'сервер'],
+  ['Adobe Premiere Pro', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31), 'Видео-отдел', false, 'видео'],
+  ['Adobe After Effects', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31), 'Анимация', false, 'видео'],
+  ['Adobe InDesign', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31), 'Верстка', false, 'публика'],
+  ['Adobe Dreamweaver', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31), 'Веб-отдел', false, 'html'],
+  ['Adobe Audition', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31), 'Звукорежиссёр', false, 'аудио'],
+  ['Adobe Bridge', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31), 'Медиа-менеджер', false, 'медиа'],
+  ['Adobe Illustrator', 'CC 2022', Date.new(2022, 1, 1), Date.new(2023, 12, 31), 'Графика', false, 'архив'],
+  ['CorelDRAW', '2022', Date.new(2021, 6, 1), Date.new(2023, 6, 1), 'Печать', false, 'архив'],
+  ['SketchUp', '2021', Date.new(2020, 5, 1), Date.new(2023, 5, 1), '3D-модели', false, 'архив'],
+  ['3ds Max', '2021', Date.new(2021, 1, 1), Date.new(2023, 1, 1), '3D-анимация', false, 'архив'],
+  ['Cinema 4D', 'R23', Date.new(2021, 3, 1), Date.new(2023, 3, 1), 'Видео студия', false, 'архив']
 ]
 
-softwares = software_list.map do |name, version, start_date, end_date|
+softwares = software_list.map do |name, version, start_date, end_date, keyholder, is_server, note|
   InstalledSoftware.create!(
     name: name,
     version: version,
     start_date: start_date,
-    finish_date: end_date
+    finish_date: end_date,
+    keyholder: keyholder,
+    is_server: is_server,
+    note: note
   )
 end
 

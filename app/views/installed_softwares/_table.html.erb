@@ -10,7 +10,17 @@
   %>
 
   <tr class="<%= row_class %>">
-    <td><%= software.name %></td>
+    <td>
+     <%= software.name %>
+      <% if software.note.present? %>
+        <span class="badge bg-secondary ms-1"><%= software.note %></span>
+      <% end %>
+
+      <% if software.is_server %>
+        <span class="badge bg-info text-dark ms-1">Серверное ПО</span>
+      <% end %>
+    </td>
+
     <td class="text-center"><%= software.version %></td>
     <td class="text-center">
       <% if software.start_date && software.finish_date %>
@@ -28,6 +38,11 @@
         <em>Не установлено</em>
       <% end %>
     </td>
+
+    <td class="text-center">
+      <%= software.keyholder %>
+    </td>
+
     <td class="text-end">
       <div class="d-inline-flex gap-2">
         <%= link_to software, class: 'text-decoration-none text-primary', title: 'Просмотр', data: { bs_toggle: "tooltip" } do %>
