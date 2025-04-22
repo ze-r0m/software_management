@@ -19,7 +19,7 @@ class InstalledSoftware < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["name", "version", "start_date", "finish_date"]
+    ["name", "version", "start_date", "finish_date", "keyholder", "is_server"]
   end
 
 
