@@ -1,62 +1,81 @@
 <div class="container mt-4">
-  <p class="text-success"><%= notice %></p>
+  <% if notice %>
+    <div class="alert alert-success"><%= notice %></div>
+  <% end %>
 
-  <div class="card shadow">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h2 class="mb-0">Аудитория: <%= @comp_class.aud_number %></h2>
+  <div class="card shadow rounded-4 overflow-hidden">
+    <div class="card-header bg-light px-4 py-3 d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">
+        <i class="bi bi-door-closed me-2"></i>Аудитория <%= @comp_class.aud_number %>
+      </h3>
       <%= link_to comp_classes_path, class: 'btn btn-secondary' do %>
         <i class="bi bi-arrow-left"></i> Назад
       <% end %>
     </div>
 
-    <div class="card-body">
-      <h5 class="text-muted mb-3">Характеристики аудитории</h5>
-
-      <dl class="row">
-        <dt class="col-sm-4">Кафедра:</dt>
-        <dd class="col-sm-8"><%= @comp_class.cafedra.name %></dd>
-
-        <dt class="col-sm-4">Посадочных мест:</dt>
-        <dd class="col-sm-8"><%= @comp_class.count_seat %></dd>
-
-        <dt class="col-sm-4">Компьютеров:</dt>
-        <dd class="col-sm-8"><%= @comp_class.count_comp %></dd>
-
-        <dt class="col-sm-4">Мест за компьютерами:</dt>
-        <dd class="col-sm-8"><%= @comp_class.count_comp_seat %></dd>
-
-        <dt class="col-sm-4">Проектор:</dt>
-        <dd class="col-sm-8">
-          <i class="bi <%= @comp_class.projector ? 'bi-check-circle text-success' : 'bi-x-circle text-danger' %>"></i>
-          <%= @comp_class.projector ? 'Есть' : 'Нет' %>
-        </dd>
-
-        <dt class="col-sm-4">Панель:</dt>
-        <dd class="col-sm-8">
-          <i class="bi <%= @comp_class.panel ? 'bi-check-circle text-success' : 'bi-x-circle text-danger' %>"></i>
-          <%= @comp_class.panel ? 'Есть' : 'Нет' %>
-        </dd>
-
-        <dt class="col-sm-4">Меловая доска:</dt>
-        <dd class="col-sm-8">
-          <i class="bi <%= @comp_class.ch_board ? 'bi-check-circle text-success' : 'bi-x-circle text-danger' %>"></i>
-          <%= @comp_class.ch_board ? 'Есть' : 'Нет' %>
-        </dd>
-
-        <dt class="col-sm-4">Специальное назначение:</dt>
-        <dd class="col-sm-8"><%= @comp_class.spec_purpose.presence || '—' %></dd>
-      </dl>
-
-      <div class="mt-4 d-flex gap-2">
-        <%= link_to edit_comp_class_path(@comp_class), class: 'btn btn-primary' do %>
-          <i class="bi bi-pencil"></i> Редактировать
-        <% end %>
-        <%= link_to @comp_class, method: :delete,
-                    data: { confirm: 'Вы уверены?' },
-                    class: 'btn btn-danger' do %>
-          <i class="bi bi-trash"></i> Удалить
-        <% end %>
+    <div class="card-body px-4 py-4">
+      <div class="mb-4">
+        <h5 class="text-muted mb-3">Основная информация</h5>
+        <ul class="list-unstyled mb-0">
+          <li class="mb-2">
+            <i class="bi bi-building me-2 text-primary"></i>
+            <strong>Кафедра:</strong> <%= @comp_class.cafedra.name %>
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-clipboard-check me-2 text-secondary"></i>
+            <strong>Специальное назначение:</strong> <%= @comp_class.spec_purpose.presence || '—' %>
+          </li>
+        </ul>
       </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <h5 class="text-muted mb-3">Числовые характеристики</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <i class="bi bi-person-fill me-2 text-success"></i>
+              <strong>Посадочных мест:</strong> <%= @comp_class.count_seat %>
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-pc-display me-2 text-info"></i>
+              <strong>Компьютеров:</strong> <%= @comp_class.count_comp %>
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-person-workspace me-2 text-warning"></i>
+              <strong>Мест за компьютерами:</strong> <%= @comp_class.count_comp_seat %>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-md-6 mb-4">
+          <h5 class="text-muted mb-3">Оборудование</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <i class="bi <%= @comp_class.projector ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger' %> me-2"></i>
+              <strong>Проектор:</strong> <%= @comp_class.projector ? 'Есть' : 'Нет' %>
+            </li>
+            <li class="mb-2">
+              <i class="bi <%= @comp_class.panel ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger' %> me-2"></i>
+              <strong>Панель:</strong> <%= @comp_class.panel ? 'Есть' : 'Нет' %>
+            </li>
+            <li class="mb-2">
+              <i class="bi <%= @comp_class.ch_board ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger' %> me-2"></i>
+              <strong>Меловая доска:</strong> <%= @comp_class.ch_board ? 'Есть' : 'Нет' %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer bg-light px-4 py-3 d-flex justify-content-end gap-2">
+      <%= link_to edit_comp_class_path(@comp_class), class: 'btn btn-outline-primary' do %>
+        <i class="bi bi-pencil"></i> Редактировать
+      <% end %>
+      <%= link_to @comp_class, method: :delete,
+                  data: { confirm: 'Вы уверены?' },
+                  class: 'btn btn-outline-danger' do %>
+        <i class="bi bi-trash"></i> Удалить
+      <% end %>
     </div>
   </div>
 </div>

@@ -8,6 +8,10 @@ class InstalledSoftware < ApplicationRecord
     where.not(id: ClassSoftware.select(:installed_software_id).distinct)
   }
 
+  def pc_count_sum
+    comp_classes.sum(:count_comp)
+  end
+
   # Позволить использовать этот скоуп в Ransack
   def self.ransackable_scopes(_auth_object = nil)
     [:without_classes]

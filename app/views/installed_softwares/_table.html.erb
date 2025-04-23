@@ -21,14 +21,18 @@
       <% end %>
     </td>
 
-    <td class="text-center"><%= software.version %></td>
+    <td class="text-center"><%= truncate(software.version, length: 8) %></td>
     <td class="text-center">
       <% if software.start_date && software.finish_date %>
-        <%= software.start_date.strftime('%d.%m.%Y') %> — <%= software.finish_date.strftime('%d.%m.%Y') %>
+        <%= software.start_date.strftime('%d.%m.%Y') %>&nbsp;—&nbsp;<%= software.finish_date.strftime('%d.%m.%Y') %>
       <% else %>
         <em>Без срока</em>
       <% end %>
     </td>
+    <td>
+      <%= truncate(software.keyholder, length: 30) %>
+    </td>
+
     <td>
       <% if software.comp_classes.any? %>
         <% software.comp_classes.each do |aud| %>
@@ -39,9 +43,12 @@
       <% end %>
     </td>
 
+<!--    Сумма пк по аудиториям в которых установленно ПО-->
     <td class="text-center">
-      <%= software.keyholder %>
+<!--      <strong><%#= @software_comp_sums[software.id] || 0 %></strong>-->
+      <strong><%= software.pc_count_sum %></strong>
     </td>
+
 
     <td class="text-end">
       <div class="d-inline-flex gap-2">

@@ -1,59 +1,99 @@
 <div class="container mt-4">
+  <% if notice %>
+    <div class="alert alert-success"><%= notice %></div>
+  <% end %>
 
-  <p style="color: green"><%= notice %></p>
+  <div class="card shadow rounded-4 overflow-hidden">
+    <div class="card-header bg-light px-4 py-3 d-flex justify-content-between align-items-center">
+      <h3 class="mb-0 d-flex align-items-center gap-3 flex-wrap">
+        <i class="bi bi-hdd text-primary"></i>
+        <span><%= @installed_software.name %></span>
 
-  <div class="card shadow">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h2 class="mb-0"><%= @installed_software.name %></h2>
+        <% if @installed_software.note.present? %>
+          <span class="badge bg-secondary"><%= @installed_software.note %></span>
+        <% end %>
+
+        <% if @installed_software.is_server %>
+          <span class="badge bg-info text-dark">Серверное ПО</span>
+        <% end %>
+
+        <% if @installed_software.finish_date.present? %>
+          <% if @installed_software.finish_date < Date.today %>
+            <span class="badge bg-danger">Просрочено</span>
+          <% elsif @installed_software.finish_date <= 3.months.from_now.to_date %>
+            <span class="badge bg-warning text-dark">Истекает в течение 3 месяцев</span>
+          <% end %>
+        <% end %>
+      </h3>
       <%= link_to installed_softwares_path, class: 'btn btn-secondary' do %>
         <i class="bi bi-arrow-left"></i> Назад
       <% end %>
     </div>
 
-
-    <div class="card-body">
-      <div class="row mb-3">
+    <div class="card-body px-4 py-4">
+      <div class="row g-4">
         <div class="col-md-6">
-          <h5 class="text-muted">Информация о ПО</h5>
-          <dl class="row">
-            <dt class="col-sm-4">Название:</dt>
-            <dd class="col-sm-8"><%= @installed_software.name %></dd>
-
-            <dt class="col-sm-4">Версия</dt>
-            <dd class="col-sm-8"><%= @installed_software.version %></dd>
-
-            <dt class="col-sm-4">Период действия:</dt>
-            <dd class="col-sm-8">
+          <h5 class="text-muted mb-3"><i class="bi bi-info-circle me-2 text-secondary"></i>Информация о ПО</h5>
+          <ul class="list-unstyled fs-6 lh-lg">
+            <li><i class="bi bi-tag me-2 text-primary"></i><strong>Версия:</strong> <%= @installed_software.version %></li>
+            <li><i class="bi bi-person-vcard me-2 text-primary"></i><strong>Держатель ключа:</strong> <%= @installed_software.keyholder.presence || '—' %></li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h5 class="text-muted mb-3"><i class="bi bi-geo-alt me-2 text-secondary"></i>Лицензия и размещение</h5>
+          <ul class="list-unstyled fs-6 lh-lg">
+            <li>
+              <i class="bi bi-calendar-event me-2 text-primary"></i>
+              <strong>Срок действия:</strong>
               <% if @installed_software.start_date && @installed_software.finish_date %>
-                <%= @installed_software.start_date.strftime('%d.%m.%Y') %> — <%= @installed_software.finish_date.strftime('%d.%m.%Y') %>
+                <% date_badge_class =
+                     if @installed_software.finish_date < Date.today
+                       'bg-danger text-white'
+                     elsif @installed_software.finish_date <= 3.months.from_now.to_date
+                       'bg-warning text-dark'
+                     else
+                       'bg-light text-dark border'
+                     end
+                %>
+                <span class="badge <%= date_badge_class %> fs-6">
+                  <%= @installed_software.start_date.strftime('%d.%m.%Y') %> — <%= @installed_software.finish_date.strftime('%d.%m.%Y') %>
+                </span>
               <% else %>
                 <em>Без срока</em>
-              <% end %><br>
+              <% end %>
+            </li>
 
-            </dd>
+            <li>
+              <i class="bi bi-hdd-stack me-2 text-primary"></i>
+              <strong>Всего ПК:</strong> <%= @installed_software.pc_count_sum %>
+            </li>
 
-            <dt class="col-sm-4">Установлено в аудиториях:</dt>
-            <dd class="col-sm-8"><% if @installed_software.comp_classes.any? %>
-                <% @installed_software.comp_classes.each do |aud| %>
-                  <span class="badge bg-success"><%= aud.aud_number %></span>
-                <% end %>
+            <li>
+              <i class="bi bi-door-open me-2 text-primary"></i>
+              <strong>Аудитории:</strong>
+              <% if @installed_software.comp_classes.any? %>
+                <div class="d-flex flex-wrap gap-2 mt-1">
+                  <% @installed_software.comp_classes.each do |aud| %>
+                    <span class="badge bg-success fs-6"><%= aud.aud_number %></span>
+                  <% end %>
+                </div>
               <% else %>
                 <em>Не установлено</em>
-              <% end %></dd>
-
-          </dl>
+              <% end %>
+            </li>
+          </ul>
         </div>
       </div>
+    </div>
 
-      <div class="d-flex gap-2">
-        <%= link_to edit_installed_software_path(@installed_software), class: 'btn btn-primary' do %>
-          <i class="bi bi-pencil"></i> Редактировать
-        <% end %>
-        <%= link_to 'Удалить', @installed_software,
-                    method: :delete,
-                    data: { confirm: 'Вы уверены?' },
-                    class: 'btn btn-danger' %>
-      </div>
+    <div class="card-footer bg-light px-4 py-3 d-flex justify-content-end gap-2">
+      <%= link_to edit_installed_software_path(@installed_software), class: 'btn btn-outline-primary' do %>
+        <i class="bi bi-pencil"></i> Редактировать
+      <% end %>
+      <%= link_to 'Удалить', @installed_software,
+                  method: :delete,
+                  data: { confirm: 'Вы уверены?' },
+                  class: 'btn btn-outline-danger' %>
     </div>
   </div>
 </div>
