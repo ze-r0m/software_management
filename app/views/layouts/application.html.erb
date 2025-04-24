@@ -20,69 +20,70 @@
     <link rel="apple-touch-icon" href="/icon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://bootswatch.com/5/zephyr/bootstrap.min.css">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module", defer: true  %>
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 
-    <%#= javascript_importmap_tags %>
     <%= javascript_include_tag "rails-ujs", "data-turbo-track": "reload" %>
 
 
   </head>
 
   <body class="d-flex flex-column min-vh-100">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-secondary rounded-bottom-4">
-    <div class="container-fluid">
-      <a class="navbar-brand d-flex align-items-center" href="/">
-        <i class="bi bi-house-door me-2"></i>
-        <span class="d-none d-lg-inline">Главная</span>
-      </a>
 
-      <div class="collapse navbar-collapse show">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <%= link_to faculties_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(faculties_path)}" do %>
-              <i class="bi bi-building me-2 text-white"></i>
-              <span class="d-none d-lg-inline">Факультеты</span>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to cafedras_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(cafedras_path)}" do %>
-              <i class="bi bi-diagram-3 me-2 text-white"></i>
-              <span class="d-none d-lg-inline">Кафедры</span>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to comp_classes_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(comp_classes_path)}" do %>
-              <i class="bi bi-door-closed me-2 text-white"></i>
-              <span class="d-none d-lg-inline">Компьютерные классы</span>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to installed_softwares_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(installed_softwares_path)}" do %>
-              <i class="bi bi-hdd me-2 text-white"></i>
-              <span class="d-none d-lg-inline">ПО</span>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to request_softs_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(request_softs_path)}" do %>
-              <i class="bi bi-journal-text me-2 text-white"></i>
-              <span class="d-none d-lg-inline">Заявки на ПО</span>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to users_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(users_path)}" do %>
-              <i class="bi bi-people me-2 text-white"></i>
-              <span class="d-none d-lg-inline">Пользователи</span>
-            <% end %>
-          </li>
-        </ul>
-      </div>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+    <div class="container-fluid">
+      <ul class="navbar-nav flex-row">
+        <li class="nav-item me-3">
+          <%= link_to root_path, class: "navbar-brand d-flex align-items-center px-2 #{'active' if current_page?(root_path)}" do %>
+            <i class="bi bi-house-door text-white fs-5 me-2"></i>
+            <span class="d-none d-lg-inline">Главная</span>
+          <% end %>
+        </li>
+        <li class="nav-item me-3">
+          <%= link_to faculties_path, class: "nav-link d-flex align-items-center px-2 #{'active' if current_page?(faculties_path)}" do %>
+            <i class="bi bi-building text-white fs-5 me-2"></i>
+            <span class="d-none d-lg-inline">Факультеты</span>
+          <% end %>
+        </li>
+        <li class="nav-item me-3">
+          <%= link_to cafedras_path, class: "nav-link d-flex align-items-center px-2 #{'active' if current_page?(cafedras_path)}" do %>
+            <i class="bi bi-diagram-3 text-white fs-5 me-2"></i>
+            <span class="d-none d-lg-inline">Кафедры</span>
+          <% end %>
+        </li>
+        <li class="nav-item me-3">
+          <%= link_to comp_classes_path, class: "nav-link d-flex align-items-center px-2 #{'active' if current_page?(comp_classes_path)}" do %>
+            <i class="bi bi-door-closed text-white fs-5 me-2"></i>
+            <span class="d-none d-lg-inline">Аудитории</span>
+          <% end %>
+        </li>
+        <li class="nav-item me-3">
+          <%= link_to installed_softwares_path, class: "nav-link d-flex align-items-center px-2 #{'active' if current_page?(installed_softwares_path)}" do %>
+            <i class="bi bi-hdd text-white fs-5 me-2"></i>
+            <span class="d-none d-lg-inline">ПО</span>
+          <% end %>
+        </li>
+        <li class="nav-item me-3">
+          <%= link_to request_softs_path, class: "nav-link d-flex align-items-center px-2 #{'active' if current_page?(request_softs_path)}" do %>
+            <i class="bi bi-journal-text text-white fs-5 me-2"></i>
+            <span class="d-none d-lg-inline">Заявки</span>
+          <% end %>
+        </li>
+        <li class="nav-item">
+          <%= link_to users_path, class: "nav-link d-flex align-items-center px-2 #{'active' if current_page?(users_path)}" do %>
+            <i class="bi bi-people text-white fs-5 me-2"></i>
+            <span class="d-none d-lg-inline">Пользователи</span>
+          <% end %>
+        </li>
+      </ul>
     </div>
   </nav>
+
+
+
 
 
 
@@ -91,10 +92,23 @@
   </div>
 
 <!--  <div class="container-fluid ">-->
-  <footer class="bg-secondary text-center py-2 rounded-top-4 mt-auto">
-    <p class="link-light">Управление цифровых образовательных технологий</p>
-    <p class="link-underline-light">Телефон: +7 (495) 123-45-67</p>
+  <footer class="bg-info text-white mt-auto py-3 small border-top">
+    <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-mortarboard-fill fs-5"></i>
+        <span>Управление цифровых образовательных технологий</span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-telephone-fill fs-6"></i>
+        <span>+7 (888) 123-45-67</span>
+      </div>
+    </div>
   </footer>
+
+
+
+
+
 <!--  </div>-->
   </body>
 </html>
