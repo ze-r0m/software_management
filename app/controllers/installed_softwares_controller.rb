@@ -1,9 +1,12 @@
 class InstalledSoftwaresController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_installed_software, only: %i[ show edit update destroy ]
+  after_action  :verify_policy_scoped, only: :index
+  after_action  :verify_authorized,     except: :index
 
   # GET /installed_softwares or /installed_softwares.json
   def index
-    @q = InstalledSoftware.ransack(params[:q])
+    @q = policy_scope(InstalledSoftware).ransack(params[:q])
 
     @installed_software = @q.result(distinct: true)
                             .includes(:comp_classes)
@@ -35,20 +38,24 @@ class InstalledSoftwaresController < ApplicationController
 
   # GET /installed_softwares/1 or /installed_softwares/1.json
   def show
+    authorize @installed_software
   end
 
   # GET /installed_softwares/new
   def new
     @installed_software = InstalledSoftware.new
+    authorize @installed_software
   end
 
   # GET /installed_softwares/1/edit
   def edit
+    authorize @installed_software
   end
 
   # POST /installed_softwares or /installed_softwares.json
   def create
     @installed_software = InstalledSoftware.new(installed_software_params)
+    authorize @installed_software
 
     respond_to do |format|
       if @installed_software.save
@@ -63,6 +70,7 @@ class InstalledSoftwaresController < ApplicationController
 
   # PATCH/PUT /installed_softwares/1 or /installed_softwares/1.json
   def update
+    authorize @installed_software
     respond_to do |format|
       if @installed_software.update(installed_software_params)
         format.html { redirect_to @installed_software, notice: "Installed software was successfully updated." }

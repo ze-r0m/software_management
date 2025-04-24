@@ -6,6 +6,26 @@ CompClass.delete_all
 InstalledSoftware.delete_all
 Cafedra.delete_all
 Faculty.delete_all
+User.delete_all
+
+puts "Создание ролей и первого админа"
+%w[admin moderator].each do |r|
+  Role.find_or_create_by!(name: r)
+end
+
+admin_role = Role.find_by!(name: 'admin')
+User.find_or_create_by!(email: 'admin@example.com') do |u|
+  u.username              = 'superadmin'
+  u.password              = 'changeme123'
+  u.password_confirmation = 'changeme123'
+  u.role                  = admin_role
+end
+
+puts "Данные для admin\n"
+puts "username: superadmin"
+puts "email: admin@example.com"
+puts "password: changeme123"
+
 
 puts "Создание факультетов..."
 faculties = [

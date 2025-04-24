@@ -88,6 +88,12 @@
 
 
   <div class="container-fluid py-3 flex-grow-1">
+    <% if notice.present? %>
+      <p class="notice"><%= notice %></p>
+    <% end %>
+    <% if alert.present? %>
+      <p class="alert"><%= alert %></p>
+    <% end %>
     <%= yield %>
   </div>
 

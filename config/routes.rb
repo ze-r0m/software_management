@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   resources :request_soft_auds
   resources :class_softwares
   resources :users

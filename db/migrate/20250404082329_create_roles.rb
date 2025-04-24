@@ -1,10 +1,10 @@
 class CreateRoles < ActiveRecord::Migration[8.0]
   def change
     create_table :roles do |t|
-      t.string :role_name
+      t.string :name
 
       t.timestamps
     end
-    add_index :roles, :role_name, unique: true
+    add_index :roles, :name, unique: true
   end
 end
