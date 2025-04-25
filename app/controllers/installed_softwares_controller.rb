@@ -84,6 +84,7 @@ class InstalledSoftwaresController < ApplicationController
 
   # DELETE /installed_softwares/1 or /installed_softwares/1.json
   def destroy
+    authorize @installed_software
     @installed_software.destroy!
 
     respond_to do |format|

@@ -1,10 +1,24 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :set_user, only: [:show, :edit, :update]
+  before_action :check_user_permission, only: [:edit, :update]
 
   # GET /users or /users.json
   def index
-    @users = User.all
+    @q = User.ransack(params[:q])
+    @users = @q.result.includes(:role)
+               .order(:email)
+               .page(params[:page])
+               .per(per_page)
+
+    @current_per_page = per_page
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
+
 
   # GET /users/1 or /users/1.json
   def show
@@ -36,6 +50,14 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1 or /users/1.json
   def update
+    # если пароль пустой — не перезаписываем его
+    if user_params[:password].blank?
+      params = user_params.except(:password, :password_confirmation)
+      @user.update(params)
+    else
+      @user.update(user_params)
+    end
+
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: "User was successfully updated." }
@@ -60,11 +82,23 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params.expect(:id))
+      @user = params[:id] ? User.find(params[:id]) : current_user
     end
 
-    # Only allow a list of trusted parameters through.
-    def user_params
-      params.expect(user: [ :username, :email, :password_hash, :role_id ])
+  def check_user_permission
+    # Модератор или сам пользователь может редактировать только свой профиль
+    if current_user.role.name == 'moderator' && current_user != @user
+      redirect_to root_path, alert: "У вас нет прав для редактирования этого пользователя."
     end
+  end
+  def user_params
+    # базовые поля
+    allowed = [:email, :username, :role_id]
+    # при создании или если админ отметил смену пароля — разрешаем пароли
+    if @user.new_record? || params.dig(:user, :change_password) == '1'
+      allowed += [:password, :password_confirmation]
+    end
+    params.require(:user).permit(allowed)
+  end
+
 end

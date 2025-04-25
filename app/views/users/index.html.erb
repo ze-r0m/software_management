@@ -1,16 +1,98 @@
-<p style="color: green"><%= notice %></p>
+<%= search_form_for @q, url: users_path, method: :get, html: { id: "search-form" }, remote: true do |f| %>
+  <div class="container mt-4">
+    <p style="color: green"><%= notice %></p>
 
-<% content_for :title, "Users" %>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">Пользователи</h1>
+      <%= link_to new_user_path, class: 'btn btn-primary' do %>
+        <i class="bi bi-plus-lg"></i> Новый пользователь
+      <% end %>
+    </div>
 
-<h1>Users</h1>
+    <div class="card shadow">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 table-striped">
+            <thead class="table-dark">
+            <tr>
+              <th><%= sort_link(@q, :email, "Email", {}, { class: "text-light" }) %></th>
+              <th><%= sort_link(@q, :role_id, "Роль", {}, { class: "text-light" }) %></th>
+              <th><%= sort_link(@q, :sign_in_count, "Кол-во входов", {}, { class: "text-light" }) %></th>
+              <th><%= sort_link(@q, :current_sign_in_at, "Последний вход", {}, { class: "text-light" }) %></th>
+              <th><%= sort_link(@q, :last_sign_in_at, "Предыдущий вход", {}, { class: "text-light" }) %></th>
+              <th><%= sort_link(@q, :current_sign_in_ip, "IP входа", {}, { class: "text-light" }) %></th>
+              <th><%= sort_link(@q, :last_sign_in_ip, "Предыдущий IP", {}, { class: "text-light" }) %></th>
+              <th><%= sort_link(@q, :created_at, "Создан", {}, { class: "text-light" }) %></th>
+              <th class="text-end">Действия</th>
+            </tr>
 
-<div id="users">
-  <% @users.each do |user| %>
-    <%= render user %>
-    <p>
-      <%= link_to "Show this user", user %>
-    </p>
-  <% end %>
-</div>
 
-<%= link_to "New user", new_user_path %>
+            </thead>
+
+            <thead class="table-light">
+            <tr>
+              <th>
+                <%= f.search_field :email_cont,
+                                   placeholder: "Email",
+                                   class: "form-control form-control-sm auto-search",
+                                   value: params.dig(:q, :email_cont) %>
+              </th>
+              <th>
+                <%= f.select :role_id_eq, Role.pluck(:name, :id),
+                             include_blank: 'Все роли',
+                             class: "form-select form-select-sm auto-search" %>
+              </th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th class="text-end">
+                <div class="d-flex gap-2 justify-content-end">
+                  <%= link_to 'Очистить', request.path, class: 'btn btn-secondary btn-sm', data: { turbo_method: :get, turbo_action: :advance } %>
+                </div>
+              </th>
+            </tr>
+            </thead>
+
+            <tbody id="users">
+            <%= render partial: "table", locals: { users: @users } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <div>
+        <div class="input-group input-group-sm">
+          <label class="input-group-text" for="per_page">Показать</label>
+          <select name="per_page" id="per_page" class="form-select form-select-sm" onchange="this.form.requestSubmit()">
+            <% [5, 10, 20, 50].each do |number| %>
+              <option value="<%= number %>" <%= @current_per_page.to_i == number ? 'selected' : '' %>><%= number %></option>
+            <% end %>
+          </select>
+          <span class="input-group-text">записей</span>
+        </div>
+      </div>
+
+      <div id="pagination-wrapper" class="d-flex justify-content-center mt-3">
+        <%= paginate @users, params: request.query_parameters, remote: true %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".auto-search").forEach((input) => {
+            input.addEventListener("input", function () {
+                clearTimeout(this.dataset.timer);
+                this.dataset.timer = setTimeout(() => {
+                    document.getElementById("search-form").requestSubmit();
+                }, 300);
+            });
+        });
+    });
+</script>

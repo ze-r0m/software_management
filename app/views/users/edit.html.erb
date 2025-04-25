@@ -1,12 +1,10 @@
-<% content_for :title, "Editing user" %>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Редактирование пользователя</h1>
+    <%= link_to @user, class: 'btn btn-secondary' do %>
+      <i class="bi bi-arrow-left"></i> Назад
+    <% end %>
+  </div>
 
-<h1>Editing user</h1>
-
-<%= render "form", user: @user %>
-
-<br>
-
-<div>
-  <%= link_to "Show this user", @user %> |
-  <%= link_to "Back to users", users_path %>
+  <%= render 'form', user: @user %>
 </div>

@@ -1,17 +1,97 @@
-<%= form_with(model: user) do |form| %>
-  <% if user.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
-
-      <ul>
-        <% user.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+<%= form_with(model: @user) do |f| %>
+  <% if @user.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% @user.errors.full_messages.each do |m| %>
+          <li><%= m %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div>
-    <%= form.submit %>
+  <div class="card shadow">
+    <div class="card-body">
+
+      <!-- Первая строка: Email, Username, Роль -->
+      <div class="row g-3">
+        <div class="col-md-4">
+          <%= f.label :email, class: 'form-label' %>
+          <%= f.email_field :email, class: 'form-control', required: true %>
+        </div>
+        <div class="col-md-4">
+          <%= f.label :username, class: 'form-label' %>
+          <%= f.text_field :username, class: 'form-control', required: true %>
+        </div>
+        <div class="col-md-4">
+          <%= f.label :role_id, "Роль", class: 'form-label' %>
+          <%= f.collection_select :role_id, Role.all, :id, :name,
+                                  { prompt: "Выберите роль" },
+                                  class: 'form-select', required: true %>
+        </div>
+      </div>
+
+      <!-- Вторая строка: пароль -->
+      <% if @user.new_record? %>
+        <div class="row g-3 mt-3">
+          <div class="col-md-4">
+            <%= f.label :password, class: 'form-label' %>
+            <%= f.password_field :password, class: 'form-control', autocomplete: 'new-password', required: true %>
+          </div>
+          <div class="col-md-4">
+            <%= f.label :password_confirmation, class: 'form-label' %>
+            <%= f.password_field :password_confirmation, class: 'form-control', required: true %>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
+      <% else %>
+        <!-- свич смены пароля -->
+        <div class="row g-3 mt-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <div class="form-check form-switch">
+              <%= f.check_box :change_password,
+                              { class: 'form-check-input', id: 'change_password_switch' },
+                              '1', '0' %>
+              <%= f.label :change_password, 'Сменить пароль',
+                          class: 'form-check-label',
+                          for: 'change_password_switch' %>
+            </div>
+          </div>
+          <div class="col-md-4"></div>
+          <div class="col-md-4"></div>
+        </div>
+
+        <!-- поля пароля, по умолчанию скрыты -->
+        <div id="password_fields" class="row g-3 mt-2" style="display: none;">
+          <div class="col-md-4">
+            <%= f.label :password, class: 'form-label' %>
+            <%= f.password_field :password, class: 'form-control', autocomplete: 'new-password' %>
+          </div>
+          <div class="col-md-4">
+            <%= f.label :password_confirmation, class: 'form-label' %>
+            <%= f.password_field :password_confirmation, class: 'form-control' %>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
+      <% end %>
+
+      <!-- Кнопки -->
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <%= link_to 'Отмена', users_path, class: 'btn btn-secondary' %>
+        <%= f.submit @user.new_record? ? 'Создать' : 'Сохранить', class: 'btn btn-primary' %>
+      </div>
+
+    </div>
   </div>
 <% end %>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const chk = document.getElementById("change_password_switch");
+        const pwFields = document.getElementById("password_fields");
+        if (!chk) return;
+        pwFields.style.display = chk.checked ? "flex" : "none";
+        chk.addEventListener("change", () => {
+            pwFields.style.display = chk.checked ? "flex" : "none";
+        });
+    });
+</script>

@@ -1,0 +1,41 @@
+<% users.each do |user| %>
+  <tr>
+    <td><%= user.email %></td>
+    <td><%= user.role&.name %></td>
+    <td><%= user.sign_in_count %></td>
+    <td><%= user.current_sign_in_at&.strftime("%d.%m.%Y %H:%M") || "-" %></td>
+    <td><%= user.last_sign_in_at&.strftime("%d.%m.%Y %H:%M") || "-" %></td>
+    <td><%= user.current_sign_in_ip || "-" %></td>
+    <td><%= user.last_sign_in_ip || "-" %></td>
+    <td><%= user.created_at.strftime("%d.%m.%Y") %></td>
+
+    <td class="text-end">
+      <div class="d-inline-flex gap-2">
+        <%= link_to user_path(user), class: 'text-decoration-none text-success', title: 'Просмотр', data: { bs_toggle: "tooltip" } do %>
+          <i class="bi bi-eye"></i>
+        <% end %>
+
+        <%= link_to edit_user_path(user), class: 'text-decoration-none text-primary', title: 'Редактировать', data: { bs_toggle: "tooltip" } do %>
+          <i class="bi bi-pencil"></i>
+        <% end %>
+
+        <%= link_to user_path(user), method: :delete,
+                    data: { confirm: 'Вы уверены?', bs_toggle: "tooltip" },
+                    class: 'text-decoration-none text-danger', title: 'Удалить' do %>
+          <i class="bi bi-trash"></i>
+        <% end %>
+      </div>
+    </td>
+
+<!--    <td class="text-end">-->
+      <%#= link_to 'Показать', user_path(user), class: "btn btn-sm btn-outline-primary" %>
+
+      <%#= link_to edit_user_path(user), class: "btn btn-sm btn-outline-secondary" do %>
+<!--        <i class="bi bi-pencil"></i>-->
+      <%# end %>
+      <%#= link_to user_path(user), method: :delete, data: { confirm: "Удалить пользователя?" }, class: "btn btn-sm btn-outline-danger" do %>
+<!--        <i class="bi bi-trash"></i>-->
+      <%# end %>
+<!--    </td>-->
+  </tr>
+<% end %>
