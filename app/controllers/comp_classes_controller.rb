@@ -1,9 +1,12 @@
 class CompClassesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_comp_class, only: %i[ show edit update destroy ]
+  after_action  :verify_policy_scoped, only: :index
+  after_action  :verify_authorized,     except: :index
 
   # GET /comp_classes or /comp_classes.json
   def index
-    @q = CompClass.includes(:cafedra).ransack(params[:q])
+    @q = policy_scope(CompClass).includes(:cafedra).ransack(params[:q])
     @comp_classes = @q.result.page(params[:page]).per(per_page)
     @current_per_page = per_page
 
@@ -17,20 +20,24 @@ class CompClassesController < ApplicationController
 
   # GET /comp_classes/1 or /comp_classes/1.json
   def show
+    authorize @comp_class
   end
 
   # GET /comp_classes/new
   def new
     @comp_class = CompClass.new
+    authorize @comp_class
   end
 
   # GET /comp_classes/1/edit
   def edit
+    authorize @comp_class
   end
 
   # POST /comp_classes or /comp_classes.json
   def create
     @comp_class = CompClass.new(comp_class_params)
+    authorize @comp_class
 
     respond_to do |format|
       if @comp_class.save
@@ -45,6 +52,7 @@ class CompClassesController < ApplicationController
 
   # PATCH/PUT /comp_classes/1 or /comp_classes/1.json
   def update
+    authorize @comp_class
     respond_to do |format|
       if @comp_class.update(comp_class_params)
         format.html { redirect_to @comp_class, notice: "Comp class was successfully updated." }
@@ -58,6 +66,7 @@ class CompClassesController < ApplicationController
 
   # DELETE /comp_classes/1 or /comp_classes/1.json
   def destroy
+    authorize @comp_class
     @comp_class.destroy!
 
     respond_to do |format|
@@ -74,6 +83,10 @@ class CompClassesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def comp_class_params
-      params.require(:comp_class).permit( :aud_number, :count_seat, :count_comp_seat, :count_comp, :spec_purpose, :projector, :panel, :ch_board, :add_note, :cafedra_id)
+      params.require(:comp_class).permit(
+        :aud_number, :count_seat, :count_comp_seat,
+        :count_comp, :spec_purpose, :projector, :panel,
+        :ch_board, :add_note, :cafedra_id
+      )
     end
 end

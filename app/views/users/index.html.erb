@@ -15,6 +15,7 @@
           <table class="table table-hover mb-0 table-striped">
             <thead class="table-dark">
             <tr>
+              <th><%= sort_link(@q, :username, "Логин", {}, { class: "text-light" }) %></th>
               <th><%= sort_link(@q, :email, "Email", {}, { class: "text-light" }) %></th>
               <th><%= sort_link(@q, :role_id, "Роль", {}, { class: "text-light" }) %></th>
               <th><%= sort_link(@q, :sign_in_count, "Кол-во входов", {}, { class: "text-light" }) %></th>
@@ -31,6 +32,7 @@
 
             <thead class="table-light">
             <tr>
+              <th></th>
               <th>
                 <%= f.search_field :email_cont,
                                    placeholder: "Email",

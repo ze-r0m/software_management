@@ -1,9 +1,12 @@
 class CafedrasController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_cafedra, only: %i[ show edit update destroy ]
+  after_action  :verify_policy_scoped, only: :index
+  after_action  :verify_authorized,     except: :index
 
   # GET /cafedras or /cafedras.json
   def index
-    @q = Cafedra.includes(:faculty).ransack(params[:q]) # важно: includes
+    @q = policy_scope(Cafedra).includes(:faculty).ransack(params[:q])
     @cafedras = @q.result.page(params[:page]).per(per_page)
     @current_per_page = per_page
 
@@ -15,20 +18,24 @@ class CafedrasController < ApplicationController
 
   # GET /cafedras/1 or /cafedras/1.json
   def show
+    authorize @cafedra
   end
 
   # GET /cafedras/new
   def new
     @cafedra = Cafedra.new
+    authorize @cafedra
   end
 
   # GET /cafedras/1/edit
   def edit
+    authorize @cafedra
   end
 
   # POST /cafedras or /cafedras.json
   def create
     @cafedra = Cafedra.new(cafedra_params)
+    authorize @cafedra
 
     respond_to do |format|
       if @cafedra.save
@@ -43,6 +50,7 @@ class CafedrasController < ApplicationController
 
   # PATCH/PUT /cafedras/1 or /cafedras/1.json
   def update
+    authorize @cafedra
     respond_to do |format|
       if @cafedra.update(cafedra_params)
         format.html { redirect_to @cafedra, notice: "Cafedra was successfully updated." }
@@ -56,6 +64,7 @@ class CafedrasController < ApplicationController
 
   # DELETE /cafedras/1 or /cafedras/1.json
   def destroy
+    authorize @cafedra
     @cafedra.destroy!
 
     respond_to do |format|
@@ -72,6 +81,8 @@ class CafedrasController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def cafedra_params
-      params.require(:cafedra).permit(:name, :add_note, faculty_id: [])
+      params.require(:cafedra).permit(
+        :name, :add_note, :faculty_id
+      )
     end
 end
