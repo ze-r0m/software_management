@@ -21,9 +21,11 @@ Rails.application.routes.draw do
   end
 
   # Профиль (для всех залогиненных): посмотреть/редактировать свой аккаунт
-  resource :profile,
-           only: %i[show edit update],
-           controller: 'users'
+  # resource :profile,
+  #          only: %i[show edit update],
+  #          controller: 'users'
+
+  get '/profile', to: 'users#profile', as: :profile
 
   # Только просмотр для модераторов
   authenticate :user, lambda { |u| u.role.name == 'moderator' } do

@@ -27,6 +27,13 @@ class UsersController < ApplicationController
     authorize @user
   end
 
+  # GET /profile
+  def profile
+    @user = current_user
+    authorize @user, :show? # можешь использовать отдельный метод, если хочешь ограничить доступ
+    render :profile
+  end
+
   # GET /users/new
   def new
     @user = User.new
@@ -57,17 +64,28 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1 or /users/1.json
   def update
     authorize @user
-    # если пароль пустой — не перезаписываем его
-    if user_params[:password].blank?
-      params = user_params.except(:password, :password_confirmation)
-      @user.update(params)
+
+    # Начинаем с параметров пользователя
+    filtered_params = user_params
+
+    # Если пользователь хочет сменить пароль
+    if params[:user][:change_password] == '1'
+      # Проверка текущего пароля, если редактирует сам себя
+      if current_user == @user
+        unless @user.valid_password?(params[:user][:current_password])
+          @user.errors.add(:current_password, 'Неверный текущий пароль')
+          return render :edit, status: :unprocessable_entity
+        end
+      end
     else
-      @user.update(user_params)
+      # Если смена пароля не запрошена, убираем password-поля
+      filtered_params = filtered_params.except(:password, :password_confirmation)
     end
 
     respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to @user, notice: "User was successfully updated." }
+      if @user.update(filtered_params)
+        target_path = current_user == @user ? profile_path : user_path(@user)
+        format.html { redirect_to target_path, notice: 'Пользователь успешно обновлён.' }
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -75,6 +93,7 @@ class UsersController < ApplicationController
       end
     end
   end
+
 
   # DELETE /users/1 or /users/1.json
   def destroy

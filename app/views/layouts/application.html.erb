@@ -100,7 +100,7 @@
 
               <!-- Действия -->
               <li><%= link_to 'Мой профиль', profile_path, class: 'dropdown-item' %></li>
-              <li><%= link_to 'Редактировать профиль', edit_profile_path, class: 'dropdown-item' %></li>
+<!--              <li><%#= link_to 'Редактировать профиль', edit_profile_path, class: 'dropdown-item' %></li>-->
               <% if current_user.role.name == 'admin' %>
                 <li><hr class="dropdown-divider"></li>
                 <li><%= link_to 'Управление пользователями', users_path, class: 'dropdown-item' %></li>
@@ -116,17 +116,20 @@
   </nav>
 
 
-
-
-
-
   <div class="container-fluid py-3 flex-grow-1">
-    <%# if notice.present? %>
-<!--      <p class="notice"><%#= notice %></p>-->
-    <%# end %>
-    <% if alert.present? %>
-      <p class="alert"><%= alert %></p>
+    <% flash.each do |type, message| %>
+      <% alert_class = case type.to_sym
+                       when :notice then "alert alert-success"
+                       when :alert  then "alert alert-danger"
+                       when :error  then "alert alert-danger"
+                       else "alert alert-info"
+                       end %>
+
+      <div class="<%= alert_class %>" role="alert" style="margin: 1rem;">
+        <%= message %>
+      </div>
     <% end %>
+
     <%= yield %>
   </div>
 

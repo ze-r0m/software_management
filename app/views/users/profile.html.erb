@@ -1,0 +1,85 @@
+<div class="container mt-4">
+  <% if notice %>
+    <div class="alert alert-success"><%= notice %></div>
+  <% end %>
+
+  <div class="card shadow rounded-4 overflow-hidden">
+    <div class="row g-0">
+      <!-- Левая панель -->
+      <div class="col-md-4 bg-body-tertiary p-4 d-flex flex-column align-items-center justify-content-between">
+        <div class="text-center">
+          <i class="bi bi-person-circle text-secondary" style="font-size: 5rem;"></i>
+          <h4 class="mt-3 mb-1 fw-semibold"><%= current_user.username.presence || "Без имени" %></h4>
+        </div>
+
+        <div class="mt-4 w-100 text-center">
+          <%= link_to edit_user_path(current_user), class: 'btn btn-outline-dark w-100' do %>
+            <i class="bi bi-pencil me-1"></i> Редактировать профиль
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Правая панель -->
+      <div class="col-md-8 p-4">
+        <div class="row g-3">
+          <!-- Блок с email -->
+          <!-- Блок с email -->
+          <div class="col-md-6">
+            <div class="card bg-light p-3 d-flex flex-column align-items-center justify-content-center">
+              <i class="bi bi-envelope fs-4 mb-2"></i>
+              <div class="fs-5 text-dark"><%= current_user.email %></div>
+            </div>
+          </div>
+
+          <!-- Блок с ролью -->
+          <% if current_user.role %>
+            <div class="col-md-6">
+              <div class="card bg-info p-3 d-flex flex-column align-items-center justify-content-center">
+                <i class="bi bi-shield-lock fs-4 mb-2 text-white"></i>
+                <div class="fs-5 text-white"><%= current_user.role.name.titleize %></div>
+              </div>
+            </div>
+          <% end %>
+
+
+
+
+          <!-- История входов -->
+          <div class="col-md-6">
+            <div class="card bg-light p-3">
+              <h6 class="text-muted mb-2"><i class="bi bi-clock-history me-1 text-primary"></i> История входов</h6>
+              <ul class="list-unstyled fs-6 lh-lg">
+                <li><strong>IP текущего входа:</strong> <%= current_user.current_sign_in_ip || 'Не указано' %></li>
+                <li><strong>IP последнего входа:</strong> <%= current_user.last_sign_in_ip || 'Не указано' %></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Количество входов -->
+          <div class="col-md-6">
+            <div class="card bg-light p-3 text-center d-flex flex-column justify-content-center h-100">
+              <h6 class="text-muted mb-2"><i class="bi bi-box-arrow-in-right text-success"></i> Количество входов</h6>
+              <div class="display-6 fw-bold text-success"><%= current_user.sign_in_count || 0 %></div>
+            </div>
+          </div>
+
+          <!-- Последний и предыдущий вход -->
+          <div class="col-md-6">
+            <div class="card bg-light p-3">
+              <h6 class="text-muted mb-2"><i class="bi bi-calendar-check me-1 text-primary"></i> Последний вход</h6>
+              <div class="fw-medium"><%= l(current_user.last_sign_in_at, format: :long) if current_user.last_sign_in_at %></div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card bg-light p-3">
+              <h6 class="text-muted mb-2"><i class="bi bi-calendar-check me-1 text-primary"></i> Предыдущий вход</h6>
+              <div class="fw-medium"><%= l(current_user.current_sign_in_at, format: :long) if current_user.current_sign_in_at %></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
