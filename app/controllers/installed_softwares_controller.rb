@@ -59,7 +59,7 @@ class InstalledSoftwaresController < ApplicationController
 
     respond_to do |format|
       if @installed_software.save
-        format.html { redirect_to @installed_software, notice: "Installed software was successfully created." }
+        format.html { redirect_to @installed_software, notice: t('flash.actions.create.notice', model: InstalledSoftware.model_name.human) }
         format.json { render :show, status: :created, location: @installed_software }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -73,7 +73,7 @@ class InstalledSoftwaresController < ApplicationController
     authorize @installed_software
     respond_to do |format|
       if @installed_software.update(installed_software_params)
-        format.html { redirect_to @installed_software, notice: "Installed software was successfully updated." }
+        format.html { redirect_to @installed_software, notice: t('flash.actions.update.notice', model: InstalledSoftware.model_name.human) }
         format.json { render :show, status: :ok, location: @installed_software }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -88,7 +88,7 @@ class InstalledSoftwaresController < ApplicationController
     @installed_software.destroy!
 
     respond_to do |format|
-      format.html { redirect_to installed_softwares_path, status: :see_other, notice: "Installed software was successfully destroyed." }
+      format.html { redirect_to installed_softwares_path, status: :see_other, notice: t('flash.actions.destroy.notice', model: InstalledSoftware.model_name.human) }
       format.json { head :no_content }
     end
   end
@@ -109,5 +109,4 @@ class InstalledSoftwaresController < ApplicationController
       comp_class_ids: []
     )
   end
-
 end

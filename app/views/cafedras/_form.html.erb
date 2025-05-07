@@ -1,15 +1,4 @@
 <%= form_with(model: cafedra) do |form| %>
-  <% if cafedra.errors.any? %>
-    <div class="alert alert-danger">
-      <h4><%= pluralize(cafedra.errors.count, "error") %> запрещают сохранение:</h4>
-      <ul>
-        <% cafedra.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
   <div class="card shadow">
     <div class="card-body">
       <div class="mb-3">

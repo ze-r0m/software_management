@@ -42,7 +42,7 @@ class FacultiesController < ApplicationController
 
     respond_to do |format|
       if @faculty.save
-        format.html { redirect_to @faculty, notice: "Faculty was successfully created." }
+        format.html { redirect_to @faculty, notice: t('flash.actions.create.notice', model: Faculty.model_name.human) }
         format.json { render :show, status: :created, location: @faculty }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -56,7 +56,7 @@ class FacultiesController < ApplicationController
     authorize @faculty
     respond_to do |format|
       if @faculty.update(faculty_params)
-        format.html { redirect_to @faculty, notice: "Faculty was successfully updated." }
+        format.html { redirect_to @faculty, notice: t('flash.actions.update.notice', model: Faculty.model_name.human) }
         format.json { render :show, status: :ok, location: @faculty }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -71,7 +71,7 @@ class FacultiesController < ApplicationController
     @faculty.destroy
 
     respond_to do |format|
-      format.html { redirect_to faculties_path, status: :see_other, notice: "Faculty was successfully destroyed." }
+      format.html { redirect_to faculties_path, status: :see_other, notice: t('flash.actions.destroy.notice', model: Faculty.model_name.human) }
       format.json { head :no_content }
     end
   end

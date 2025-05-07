@@ -1,0 +1,53 @@
+# config/locales/ru.yml
+ru:
+  activerecord:
+    models:
+      installed_software: "ПО"
+      faculty: "Факультет"
+      cafedra: "Кафедра"
+      comp_class: "Компьютерный класс"
+
+
+    attributes:
+      installed_software:
+        name: "Название"
+        version: "Версия"
+        license_expiry: "Истечение лицензии"
+      cafedra:
+        name: "Название"
+        add_note: "Дополнительная заметка"
+        faculty_id: "Факультет"
+      faculty:
+        name: "Название факультета"
+        add_note: "Дополнительная заметка"
+      comp_class:
+        aud_number: "Номер аудитории"
+        count_seat: "Количество мест"
+        count_comp_seat: "Количество мест с компьютерами"
+        count_comp: "Количество компьютеров"
+        spec_purpose: "Специальное назначение"
+        projector: "Проектор"
+        panel: "Панель"
+        ch_board: "Доска"
+        add_note: "Дополнительная заметка"
+        cafedra_id: "Кафедра"
+
+  flash:
+    actions:
+      create:
+        notice: "Запись модели %{model} успешно создана."
+      update:
+        notice: "Запись модели %{model} успешно обновлена."
+      destroy:
+        notice: "Запись модели %{model} удалена."
+
+  helpers:
+    submit:
+      create: "Создать запись модели: %{model}"
+      update: "Обновить запись модели: %{model}"
+      submit: "Сохранить запись модели: %{model}"
+
+  notices:
+    created: "Запись модели %{model} успешно создана."
+    updated: "Запись модели %{model} успешно обновлена."
+    destroyed: "Запись модели %{model} удалена."

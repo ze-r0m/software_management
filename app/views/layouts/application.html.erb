@@ -119,16 +119,18 @@
   <div class="container-fluid py-3 flex-grow-1">
     <% flash.each do |type, message| %>
       <% alert_class = case type.to_sym
-                       when :notice then "alert alert-success"
-                       when :alert  then "alert alert-danger"
-                       when :error  then "alert alert-danger"
-                       else "alert alert-info"
+                       when :notice then "alert alert-success alert-dismissible fade show"
+                       when :alert  then "alert alert-danger alert-dismissible fade show"
+                       when :error  then "alert alert-danger alert-dismissible fade show"
+                       else "alert alert-info alert-dismissible fade show"
                        end %>
 
       <div class="<%= alert_class %>" role="alert" style="margin: 1rem;">
         <%= message %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
       </div>
     <% end %>
+
 
     <%= yield %>
   </div>

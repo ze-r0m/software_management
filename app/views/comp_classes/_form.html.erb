@@ -1,15 +1,4 @@
 <%= form_with(model: comp_class) do |form| %>
-  <% if comp_class.errors.any? %>
-    <div class="alert alert-danger">
-      <h4><%= pluralize(comp_class.errors.count, "ошибка") %> запрещают сохранение:</h4>
-      <ul>
-        <% comp_class.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
   <div class="card shadow">
     <div class="card-body">
       <div class="row">

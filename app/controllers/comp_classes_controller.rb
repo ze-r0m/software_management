@@ -41,7 +41,7 @@ class CompClassesController < ApplicationController
 
     respond_to do |format|
       if @comp_class.save
-        format.html { redirect_to @comp_class, notice: "Comp class was successfully created." }
+        format.html { redirect_to @comp_class, notice: t('flash.actions.create.notice', model: CompClass.model_name.human) }
         format.json { render :show, status: :created, location: @comp_class }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -55,7 +55,7 @@ class CompClassesController < ApplicationController
     authorize @comp_class
     respond_to do |format|
       if @comp_class.update(comp_class_params)
-        format.html { redirect_to @comp_class, notice: "Comp class was successfully updated." }
+        format.html { redirect_to @comp_class, notice: t('flash.actions.update.notice', model: CompClass.model_name.human) }
         format.json { render :show, status: :ok, location: @comp_class }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -70,7 +70,7 @@ class CompClassesController < ApplicationController
     @comp_class.destroy!
 
     respond_to do |format|
-      format.html { redirect_to comp_classes_path, status: :see_other, notice: "Comp class was successfully destroyed." }
+      format.html { redirect_to comp_classes_path, status: :see_other, notice: t('flash.actions.destroy.notice', model: CompClass.model_name.human) }
       format.json { head :no_content }
     end
   end

@@ -39,7 +39,7 @@ class CafedrasController < ApplicationController
 
     respond_to do |format|
       if @cafedra.save
-        format.html { redirect_to @cafedra, notice: "Cafedra was successfully created." }
+        format.html { redirect_to @cafedra, notice: t('flash.actions.create.notice', model: Cafedra.model_name.human) }
         format.json { render :show, status: :created, location: @cafedra }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -53,7 +53,7 @@ class CafedrasController < ApplicationController
     authorize @cafedra
     respond_to do |format|
       if @cafedra.update(cafedra_params)
-        format.html { redirect_to @cafedra, notice: "Cafedra was successfully updated." }
+        format.html { redirect_to @cafedra, notice: t('flash.actions.update.notice', model: Cafedra.model_name.human) }
         format.json { render :show, status: :ok, location: @cafedra }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -68,7 +68,7 @@ class CafedrasController < ApplicationController
     @cafedra.destroy!
 
     respond_to do |format|
-      format.html { redirect_to cafedras_path, status: :see_other, notice: "Cafedra was successfully destroyed." }
+      format.html { redirect_to cafedras_path, status: :see_other, notice: t('flash.actions.destroy.notice', model: Cafedra.model_name.human) }
       format.json { head :no_content }
     end
   end
