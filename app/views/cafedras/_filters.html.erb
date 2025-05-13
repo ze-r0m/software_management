@@ -1,0 +1,72 @@
+<thead class="table-light">
+<tr>
+  <th>
+    <%= search_field_tag "q[name_cont]", params.dig(:q, :name_cont), placeholder: "Название кафедры", class: "form-control form-control-sm auto-search" %>
+  </th>
+  <th>
+    <div class="dropdown w-100">
+      <button class="form-control form-control-sm dropdown-toggle text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <%= (params.dig(:q, :faculty_name_in)&.join(', ') || 'Фильтр факультетов') %>
+      </button>
+      <div class="dropdown-menu p-3 shadow w-100" style="max-height: 40vh; overflow-y: auto;">
+        <input type="text" class="form-control form-control-sm mb-2" placeholder="Поиск..." id="faculty-filter-search">
+        <% faculties.each do |faculty| %>
+          <div class="form-check">
+            <input class="form-check-input faculty-checkbox"
+                   type="checkbox"
+                   name="q[faculty_name_in][]"
+                   value="<%= faculty.name %>"
+                   id="faculty_<%= faculty.id %>"
+                   <%= Array(params.dig(:q, :faculty_name_in)).include?(faculty.name) ? 'checked' : '' %> >
+            <label class="form-check-label" for="faculty_<%= faculty.id %>">
+              <%= faculty.name %>
+            </label>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </th>
+  <th>
+    <%= search_field_tag "q[add_note_cont]", params.dig(:q, :add_note_cont), placeholder: "Примечания", class: "form-control form-control-sm auto-search" %>
+  </th>
+  <th class="text-end">
+    <div class="d-flex gap-2 align-content-end justify-content-end">
+      <%= link_to 'Очистить', request.path, class: 'btn btn-secondary btn-sm', data: { turbo_method: :get, turbo_action: :advance } %>
+    </div>
+  </th>
+</tr>
+</thead>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Авто-поиск при вводе текста
+        document.querySelectorAll(".auto-search").forEach(input => {
+            input.addEventListener("input", function() {
+                clearTimeout(this.dataset.timer);
+                this.dataset.timer = setTimeout(() => {
+                    document.getElementById("search-form").requestSubmit();
+                }, 300);
+            });
+        });
+
+        // Фильтрация факультетов
+        const facultySearch = document.getElementById("faculty-filter-search");
+        if (facultySearch) {
+            facultySearch.addEventListener("input", function() {
+                const term = this.value.toLowerCase();
+                document.querySelectorAll('.dropdown-menu .form-check').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(term) ? 'block' : 'none';
+                });
+            });
+        }
+
+        // Автоотправка формы при выборе факультета
+        document.querySelectorAll(".faculty-checkbox").forEach(checkbox => {
+            checkbox.addEventListener("change", () => {
+                document.getElementById("search-form").requestSubmit();
+            });
+        });
+    });
+</script>

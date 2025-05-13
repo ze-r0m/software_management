@@ -11,6 +11,8 @@ class CompClassesController < ApplicationController
     @current_per_page = per_page
 
     @all_filtered_comp_class_auds = @q.result(distinct: true).pluck(:aud_number)
+    @all_aud_numbers = CompClass.order(:aud_number).distinct.pluck(:aud_number)
+    @cafedras = Cafedra.order(:name)
 
     respond_to do |format|
       format.html

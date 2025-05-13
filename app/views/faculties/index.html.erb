@@ -25,28 +25,7 @@
             </tr>
             </thead>
 
-            <thead class="table-light">
-            <tr>
-              <th>
-                <%= f.search_field :name_cont,
-                                   placeholder: "Название факультета",
-                                   class: "form-control form-control-sm auto-search",
-                                   value: params.dig(:q, :name_cont) %>
-              </th>
-              <th>
-                <%= f.search_field :add_note_cont,
-                                   placeholder: "Примечания",
-                                   class: "form-control form-control-sm auto-search",
-                                   value: params.dig(:q, :add_note_cont) %>
-              </th>
-              <th class="text-end">
-                <div class="d-flex gap-2 align-content-end justify-content-end">
-                  <%= link_to 'Очистить', request.path, class: 'btn btn-secondary btn-sm', data: { turbo_method: :get, turbo_action: :advance } %>
-                </div>
-              </th>
-            </tr>
-
-            </thead>
+            <%= render partial: "filters", locals: {f: f}%>
 
 
             <tbody id="faculties">
@@ -77,18 +56,5 @@
           </div>
         </div>
 
-
 </div>
 <% end %>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".auto-search").forEach((input) => {
-            input.addEventListener("input", function () {
-                clearTimeout(this.dataset.timer);
-                this.dataset.timer = setTimeout(() => {
-                    document.getElementById("search-form").requestSubmit();
-                }, 300);
-            });
-        });
-    });
-</script>

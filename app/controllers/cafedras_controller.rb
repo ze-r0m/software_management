@@ -10,6 +10,8 @@ class CafedrasController < ApplicationController
     @cafedras = @q.result.page(params[:page]).per(per_page)
     @current_per_page = per_page
 
+    @faculties = Faculty.order(:name)
+
     respond_to do |format|
       format.html
       format.js

@@ -1,0 +1,27 @@
+<thead class="table-light">
+<tr>
+  <th></th>
+  <th>
+    <%= f.search_field :email_cont,
+                       placeholder: "Email",
+                       class: "form-control form-control-sm auto-search",
+                       value: params.dig(:q, :email_cont) %>
+  </th>
+  <th>
+    <%= f.select :role_id_eq, Role.pluck(:name, :id),
+                 include_blank: 'Все роли',
+                 class: "form-select form-select-sm auto-search" %>
+  </th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th class="text-end">
+    <div class="d-flex gap-2 justify-content-end">
+      <%= link_to 'Очистить', request.path, class: 'btn btn-secondary btn-sm', data: { turbo_method: :get, turbo_action: :advance } %>
+    </div>
+  </th>
+</tr>
+</thead>

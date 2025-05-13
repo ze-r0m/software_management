@@ -1,228 +1,69 @@
 <%= search_form_for @q, url: comp_classes_path, method: :get, html: { id: "search-form" }, remote: true do |f| %>
   <%= hidden_field_tag :per_page, params[:per_page] %>
   <div class="container mt-4">
-
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0">Компьютерные классы</h1>
-    <%= link_to new_comp_class_path, class: 'btn btn-primary' do %>
-      <i class="bi bi-plus-lg"></i> Новый класс
-    <% end %>
-  </div>
-
-  <div class="card shadow">
-    <div class="card-body p-0">
-
-
-
-<!--        Дает возможность раскрывать на всю страницу выпадающие списки фильтров, но-->
-<!--        убирает прокрутку таблицы в мобильной версии-->
-<!--        <div class="table-responsive">-->
-          <table class="table table-hover mb-0 table-striped">
-            <thead class="table-dark">
-            <tr class="text-center">
-              <th class="text-start"><%= sort_link(@q, :aud_number, "№ ауд", {}, { class: "text-light" }) %></th>
-              <th><%= sort_link(@q, :cafedra_name, "Каф", {}, { class: "text-light" }) %></th>
-              <th><%= sort_link(@q, :count_seat, "Посад места", {}, { class: "text-light" }) %></th>
-              <th><%= sort_link(@q, :count_comp, "Кол-во ПК", {}, { class: "text-light" }) %></th>
-              <th><%= sort_link(@q, :count_comp_seat, "Кол-во посад за ПК", {}, { class: "text-light" }) %></th>
-              <th><%= sort_link(@q, :projector, "Проектор", {}, { class: "text-light" }) %></th>
-              <th><%= sort_link(@q, :panel, "Панель", {}, { class: "text-light" }) %></th>
-              <th><%= sort_link(@q, :ch_board, "Меловая доска", {}, { class: "text-light" }) %></th>
-              <th><%= sort_link(@q, :spec_purpose, "Спецназнач", {}, { class: "text-light" }) %></th>
-              <th class="text-end">Действия</th>
-            </tr>
-            </thead>
-
-
-            <thead class="table-light">
-            <tr>
-<!--              фильтр аудиторий-->
-              <th class="start">
-                <div class="dropdown w-100">
-                  <button class="form-control form-control-sm dropdown-toggle text-start"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false">
-                    <%= (params.dig(:q, :aud_number_in)&.join(', ') || '№ ауд') %>
-                  </button>
-                  <div class="dropdown-menu p-3 shadow w-100" style="max-height: 40vh; overflow-y: auto;" id="aud-dropdown">
-                    <input type="text" class="form-control form-control-sm mb-2 auto-search" placeholder="Поиск..." id="aud-filter-search">
-                    <% CompClass.order(:aud_number).distinct.pluck(:aud_number).each do |aud| %>
-                      <div class="form-check">
-                        <input class="form-check-input aud-checkbox"
-                               type="checkbox"
-                               name="q[aud_number_in][]"
-                               value="<%= aud %>"
-                               id="aud_<%= aud %>"
-                               <%= Array(params.dig(:q, :aud_number_in)).include?(aud) ? 'checked' : '' %>>
-                        <label class="form-check-label" for="aud_<%= aud %>">
-                          <%= aud %>
-                        </label>
-                      </div>
-                    <% end %>
-                  </div>
-                </div>
-              </th>
-<!--              фильтр кафедр-->
-              <th>
-                <div class="dropdown w-100">
-                  <button class="form-control form-control-sm dropdown-toggle text-start"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false">
-                    <%= (params.dig(:q, :cafedra_name_in)&.join(', ') || 'Каф') %>
-                  </button>
-                  <div class="dropdown-menu p-3 shadow w-100" style="max-height: 40vh; overflow-y: auto;">
-                    <input type="text" class="form-control form-control-sm mb-2" placeholder="Поиск..." id="cafedra-filter-search">
-                    <% Cafedra.order(:name).each do |cafedra| %>
-                      <div class="form-check">
-                        <input class="form-check-input cafedras-checkbox"
-                               type="checkbox"
-                               name="q[cafedra_name_in][]"
-                               value="<%= cafedra.name %>"
-                               id="cafedra_<%= cafedra.id %>"
-                               <%= Array(params.dig(:q, :cafedra_name_in)).include?(cafedra.name) ? 'checked' : '' %>>
-                        <label class="form-check-label" for="cafedra_<%= cafedra.id %>">
-                          <%= cafedra.name %>
-                        </label>
-                      </div>
-                    <% end %>
-                  </div>
-                </div>
-              </th>
-              <!-- фильтр посадочных мест -->
-              <th>
-                <%= f.search_field :count_seat_eq,
-                                   # placeholder: "Фильтр посад мест",
-                                   class: "form-control form-control-sm auto-search",
-                                   value: params.dig(:q, :count_seat_eq) %>
-              </th>
-              <!-- фильтр кол-во ПК -->
-              <th>
-                <%= f.search_field :count_comp_eq,
-                                   # placeholder: "Фильтр кол-во пк",
-                                   class: "form-control form-control-sm auto-search",
-                                   value: params.dig(:q, :count_comp_eq) %>
-              </th>
-              <!-- фильтр посад за ПК -->
-              <th>
-                <%= f.search_field :count_comp_seat_eq,
-                                   # placeholder: "Фильтр кол-во посад за пк",
-                                   class: "form-control form-control-sm auto-search",
-                                   value: params.dig(:q, :count_comp_seat_eq) %>
-              </th>
-              <!-- Фильтр "Проектор" -->
-              <th>
-                <%= select_tag 'q[projector_eq]',
-                               options_for_select([['Не важно', ''], ['Есть', '1'], ['Нет', '0']], selected: params.dig(:q, :projector_eq)),
-                               class: 'form-select form-select-sm auto-submit' %>
-              </th>
-              <!-- Фильтр "Панель" -->
-              <th>
-                <%= select_tag 'q[panel_eq]',
-                               options_for_select([['Не важно', ''], ['Есть', '1'], ['Нет', '0']], selected: params.dig(:q, :panel_eq)),
-                               class: 'form-select form-select-sm auto-submit' %>
-              </th>
-              <!-- Фильтр "Меловая доска" -->
-              <th>
-                <%= select_tag 'q[ch_board_eq]',
-                               options_for_select([['Не важно', ''], ['Есть', '1'], ['Нет', '0']], selected: params.dig(:q, :ch_board_eq)),
-                               class: 'form-select form-select-sm auto-submit' %>
-              </th>
-              <!-- Фильтр спецназнач-->
-              <th>
-                <%= f.search_field :spec_purpose_cont, placeholder: "Спецназнач", class: "form-control form-control-sm auto-search", value: params.dig(:q, :spec_purpose_cont) %>
-              </th>
-              <!-- Кнопка сброса -->
-
-
-
-              <th class="text-end text-nowrap" id="comp-classes-actions-cell">
-                <div class="d-inline-flex gap-2 flex-nowrap">
-                  <%= render partial: 'actions_buttons',
-                             locals: { all_filtered: @all_filtered_comp_class_auds } %>
-                </div>
-              </th>
-            </tr>
-            </thead>
-
-            <tbody id="comp_classes" class="text-center">
-
-            <% if @comp_classes.any? %>
-              <%= render partial: "table", locals: { comp_classes: @comp_classes } %>
-            <% else %>
-              <tr>
-                <td colspan="10" class="text-center text-muted py-4">
-                  Нет записей
-                </td>
-              </tr>
-            <% end %>
-            </tbody>
-          </table>
-        </div>
-  </div>
-
-  <div class="d-flex justify-content-between align-items-center mt-3">
-    <div>
-        <div class="input-group input-group-sm">
-          <label class="input-group-text" for="per_page">Показать</label>
-          <select name="per_page" id="per_page" class="form-select form-select-sm" onchange="this.form.requestSubmit()">
-            <% [5, 10, 20, 50].each do |number| %>
-              <option value="<%= number %>" <%= @current_per_page.to_i == number ? 'selected' : '' %>><%= number %></option>
-            <% end %>
-          </select>
-          <span class="input-group-text">записей</span>
-        </div>
-        </div>
-    <div id="pagination-wrapper" class="d-flex justify-content-center mt-3">
-      <%= paginate @comp_classes, params: request.query_parameters, remote: true %>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">Компьютерные классы</h1>
+      <%= link_to new_comp_class_path, class: 'btn btn-primary' do %>
+        <i class="bi bi-plus-lg"></i> Новый класс
+      <% end %>
     </div>
-  </div>
 
+    <div class="card shadow">
+      <div class="card-body p-0">
+
+  <!--        Дает возможность раскрывать на всю страницу выпадающие списки фильтров, но-->
+  <!--        убирает прокрутку таблицы в мобильной версии-->
+  <!--        <div class="table-responsive">-->
+            <table class="table table-hover mb-0 table-striped">
+              <thead class="table-dark">
+              <tr class="text-center">
+                <th class="text-start"><%= sort_link(@q, :aud_number, "№ ауд", {}, { class: "text-light" }) %></th>
+                <th><%= sort_link(@q, :cafedra_name, "Каф", {}, { class: "text-light" }) %></th>
+                <th><%= sort_link(@q, :count_seat, "Посад места", {}, { class: "text-light" }) %></th>
+                <th><%= sort_link(@q, :count_comp, "Кол-во ПК", {}, { class: "text-light" }) %></th>
+                <th><%= sort_link(@q, :count_comp_seat, "Кол-во посад за ПК", {}, { class: "text-light" }) %></th>
+                <th><%= sort_link(@q, :projector, "Проектор", {}, { class: "text-light" }) %></th>
+                <th><%= sort_link(@q, :panel, "Панель", {}, { class: "text-light" }) %></th>
+                <th><%= sort_link(@q, :ch_board, "Меловая доска", {}, { class: "text-light" }) %></th>
+                <th><%= sort_link(@q, :spec_purpose, "Спецназнач", {}, { class: "text-light" }) %></th>
+                <th class="text-end">Действия</th>
+              </tr>
+              </thead>
+
+              <%= render partial: "filters", locals: {f: f} %>
+
+              <tbody id="comp_classes" class="text-center">
+
+              <% if @comp_classes.any? %>
+                <%= render partial: "table", locals: { comp_classes: @comp_classes } %>
+              <% else %>
+                <tr>
+                  <td colspan="10" class="text-center text-muted py-4">
+                    Нет записей
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <div>
+          <div class="input-group input-group-sm">
+            <label class="input-group-text" for="per_page">Показать</label>
+            <select name="per_page" id="per_page" class="form-select form-select-sm" onchange="this.form.requestSubmit()">
+              <% [5, 10, 20, 50].each do |number| %>
+                <option value="<%= number %>" <%= @current_per_page.to_i == number ? 'selected' : '' %>><%= number %></option>
+              <% end %>
+            </select>
+            <span class="input-group-text">записей</span>
+          </div>
+          </div>
+      <div id="pagination-wrapper" class="d-flex justify-content-center mt-3">
+        <%= paginate @comp_classes, params: request.query_parameters, remote: true %>
+      </div>
+    </div>
 
 </div>
 <%end %>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        function setupDropdownSearch(inputId, dropdownSelector, checkboxClass) {
-            const searchInput = document.getElementById(inputId);
-            if (searchInput) {
-                searchInput.addEventListener("input", function () {
-                    const term = this.value.toLowerCase();
-                    document.querySelectorAll(dropdownSelector).forEach(item => {
-                        const text = item.textContent.toLowerCase();
-                        item.style.display = text.includes(term) ? 'block' : 'none';
-                    });
-                });
-            }
-
-            document.querySelectorAll(checkboxClass).forEach(checkbox => {
-                checkbox.addEventListener("change", () => {
-                    const form = document.getElementById("search-form");
-                    if (form) Rails.fire(form, 'submit');
-                });
-            });
-        }
-
-        setupDropdownSearch("aud-filter-search", '#aud-dropdown .form-check', ".aud-checkbox");
-        setupDropdownSearch("cafedra-filter-search", '.dropdown-menu .form-check', ".cafedras-checkbox");
-
-// Авто-поиск при вводе текста
-        document.querySelectorAll(".auto-search").forEach(input => {
-            input.addEventListener("input", function() {
-                clearTimeout(this.dataset.timer);
-                this.dataset.timer = setTimeout(() => {
-                    document.getElementById("search-form").requestSubmit();
-                }, 300);
-            });
-        });
-
-        document.querySelectorAll('.auto-submit').forEach(el => {
-            el.addEventListener('change', () => {
-                const form = document.getElementById('search-form');
-                if (form) Rails.fire(form, 'submit');
-            });
-        });
-    });
-</script>

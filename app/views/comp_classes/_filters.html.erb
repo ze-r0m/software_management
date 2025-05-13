@@ -1,0 +1,156 @@
+<thead class="table-light">
+<tr>
+  <!--              фильтр аудиторий-->
+  <th class="start">
+    <div class="dropdown w-100">
+      <button class="form-control form-control-sm dropdown-toggle text-start"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+        <%= (params.dig(:q, :aud_number_in)&.join(', ') || '№ ауд') %>
+      </button>
+      <div class="dropdown-menu p-3 shadow w-100" style="max-height: 40vh; overflow-y: auto;" id="aud-dropdown">
+        <input type="text" class="form-control form-control-sm mb-2 auto-search" placeholder="Поиск..." id="aud-filter-search">
+        <% @all_aud_numbers.each do |aud| %>
+          <div class="form-check">
+            <input class="form-check-input aud-checkbox"
+                   type="checkbox"
+                   name="q[aud_number_in][]"
+                   value="<%= aud %>"
+                   id="aud_<%= aud %>"
+                   <%= Array(params.dig(:q, :aud_number_in)).include?(aud) ? 'checked' : '' %>>
+            <label class="form-check-label" for="aud_<%= aud %>">
+              <%= aud %>
+            </label>
+          </div>
+        <% end %>
+
+      </div>
+    </div>
+  </th>
+  <!--              фильтр кафедр-->
+  <th>
+    <div class="dropdown w-100">
+      <button class="form-control form-control-sm dropdown-toggle text-start"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+        <%= (params.dig(:q, :cafedra_name_in)&.join(', ') || 'Каф') %>
+      </button>
+      <div class="dropdown-menu p-3 shadow w-100" style="max-height: 40vh; overflow-y: auto;">
+        <input type="text" class="form-control form-control-sm mb-2" placeholder="Поиск..." id="cafedra-filter-search">
+        <% @cafedras.each do |cafedra| %>
+          <div class="form-check">
+            <input class="form-check-input cafedras-checkbox"
+                   type="checkbox"
+                   name="q[cafedra_name_in][]"
+                   value="<%= cafedra.name %>"
+                   id="cafedra_<%= cafedra.id %>"
+                   <%= Array(params.dig(:q, :cafedra_name_in)).include?(cafedra.name) ? 'checked' : '' %>>
+            <label class="form-check-label" for="cafedra_<%= cafedra.id %>">
+              <%= cafedra.name %>
+            </label>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </th>
+  <!-- фильтр посадочных мест -->
+  <th>
+    <%= f.search_field :count_seat_eq,
+                       # placeholder: "Фильтр посад мест",
+                       class: "form-control form-control-sm auto-search",
+                       value: params.dig(:q, :count_seat_eq) %>
+  </th>
+  <!-- фильтр кол-во ПК -->
+  <th>
+    <%= f.search_field :count_comp_eq,
+                       # placeholder: "Фильтр кол-во пк",
+                       class: "form-control form-control-sm auto-search",
+                       value: params.dig(:q, :count_comp_eq) %>
+  </th>
+  <!-- фильтр посад за ПК -->
+  <th>
+    <%= f.search_field :count_comp_seat_eq,
+                       # placeholder: "Фильтр кол-во посад за пк",
+                       class: "form-control form-control-sm auto-search",
+                       value: params.dig(:q, :count_comp_seat_eq) %>
+  </th>
+  <!-- Фильтр "Проектор" -->
+  <th>
+    <%= select_tag 'q[projector_eq]',
+                   options_for_select([['Не важно', ''], ['Есть', '1'], ['Нет', '0']], selected: params.dig(:q, :projector_eq)),
+                   class: 'form-select form-select-sm auto-submit' %>
+  </th>
+  <!-- Фильтр "Панель" -->
+  <th>
+    <%= select_tag 'q[panel_eq]',
+                   options_for_select([['Не важно', ''], ['Есть', '1'], ['Нет', '0']], selected: params.dig(:q, :panel_eq)),
+                   class: 'form-select form-select-sm auto-submit' %>
+  </th>
+  <!-- Фильтр "Меловая доска" -->
+  <th>
+    <%= select_tag 'q[ch_board_eq]',
+                   options_for_select([['Не важно', ''], ['Есть', '1'], ['Нет', '0']], selected: params.dig(:q, :ch_board_eq)),
+                   class: 'form-select form-select-sm auto-submit' %>
+  </th>
+  <!-- Фильтр спецназнач-->
+  <th>
+    <%= f.search_field :spec_purpose_cont, placeholder: "Спецназнач", class: "form-control form-control-sm auto-search", value: params.dig(:q, :spec_purpose_cont) %>
+  </th>
+  <!-- Кнопка сброса -->
+
+
+
+  <th class="text-end text-nowrap" id="comp-classes-actions-cell">
+    <div class="d-inline-flex gap-2 flex-nowrap">
+      <%= render partial: 'actions_buttons',
+                 locals: { all_filtered: @all_filtered_comp_class_auds } %>
+    </div>
+  </th>
+</tr>
+</thead>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function setupDropdownSearch(inputId, dropdownSelector, checkboxClass) {
+            const searchInput = document.getElementById(inputId);
+            if (searchInput) {
+                searchInput.addEventListener("input", function () {
+                    const term = this.value.toLowerCase();
+                    document.querySelectorAll(dropdownSelector).forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        item.style.display = text.includes(term) ? 'block' : 'none';
+                    });
+                });
+            }
+
+            document.querySelectorAll(checkboxClass).forEach(checkbox => {
+                checkbox.addEventListener("change", () => {
+                    const form = document.getElementById("search-form");
+                    if (form) Rails.fire(form, 'submit');
+                });
+            });
+        }
+
+        setupDropdownSearch("aud-filter-search", '#aud-dropdown .form-check', ".aud-checkbox");
+        setupDropdownSearch("cafedra-filter-search", '.dropdown-menu .form-check', ".cafedras-checkbox");
+
+// Авто-поиск при вводе текста
+        document.querySelectorAll(".auto-search").forEach(input => {
+            input.addEventListener("input", function() {
+                clearTimeout(this.dataset.timer);
+                this.dataset.timer = setTimeout(() => {
+                    document.getElementById("search-form").requestSubmit();
+                }, 300);
+            });
+        });
+
+        document.querySelectorAll('.auto-submit').forEach(el => {
+            el.addEventListener('change', () => {
+                const form = document.getElementById('search-form');
+                if (form) Rails.fire(form, 'submit');
+            });
+        });
+    });
+</script>

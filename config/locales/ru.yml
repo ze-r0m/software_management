@@ -51,3 +51,11 @@ ru:
     created: "Запись модели %{model} успешно создана."
     updated: "Запись модели %{model} успешно обновлена."
     destroyed: "Запись модели %{model} удалена."
+
+  views:
+    pagination:
+      first: "Первая"
+      previous: "<"
+      next: ">"
+      last: "Последняя"
+      truncate: "..."
