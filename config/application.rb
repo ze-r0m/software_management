@@ -27,5 +27,8 @@ module SoftwareManagement
 
     # Устанавливаем русский язык по умолчанию
     config.i18n.default_locale = :ru
+
+    config.autoload_paths << Rails.root.join('lib')
+
   end
 end
