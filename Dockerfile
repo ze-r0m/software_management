@@ -42,6 +42,11 @@ RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
+
+# Установим пересобранный гем вручную
+COPY mysql2-0.5.6.1.gem /tmp/
+RUN gem install /tmp/mysql2-0.5.6.1.gem
+
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
