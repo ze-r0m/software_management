@@ -15,11 +15,13 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
   password: 123
-  host: <%= ENV.fetch("DB_HOST") { "127.0.0.1" } %>
+#  host: <%#= ENV.fetch("DB_HOST") { "127.0.0.1" } %>
+  host: <%= ENV.fetch("DB_HOST", "db") %> # теперь контейнер db
 
 development:
   <<: *default
-  database: software_management_development
+#  database: software_management_development
+  database: <%= ENV.fetch("DB_NAME", "software_management_development") %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

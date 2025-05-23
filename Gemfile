@@ -6,7 +6,7 @@ gem "activerecord", "~> 8.0.2"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use mysql as the database for Active Record
-gem "mysql2"
+gem "mysql2", "~> 0.5"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
