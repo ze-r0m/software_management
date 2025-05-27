@@ -6,10 +6,9 @@ import Rails from "@rails/ujs"
 import 'select2'
 import 'select2/dist/css/select2.css'
 
-
 Rails.start();
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("turbo:load", function () {
     $('.select2').select2({
         width: '100%',
         placeholder: "Выберите факультет(ы)",
