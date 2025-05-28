@@ -6,6 +6,7 @@ ru:
       faculty: "Факультет"
       cafedra: "Кафедра"
       comp_class: "Компьютерный класс"
+      user: "Пользователи"
 
 
     attributes:

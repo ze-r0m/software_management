@@ -16,7 +16,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/rails
+      - .:/rails:cached
       - bundle_cache:/usr/local/bundle
     ports:
       - "3000:3000"

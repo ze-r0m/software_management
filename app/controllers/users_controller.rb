@@ -7,8 +7,9 @@ class UsersController < ApplicationController
 
   # GET /users or /users.json
   def index
-    @q = policy_scope(User).ransack(params[:q])
-    @users = @q.result.includes(:role)
+    @q = policy_scope(User).includes(:role).ransack(params[:q])
+    @users = @q.result
+               .includes(:role)
                .order(:email)
                .page(params[:page])
                .per(per_page)

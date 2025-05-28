@@ -18,4 +18,8 @@ class User < ApplicationRecord
      "reset_password_token", "role_id", "sign_in_count", "updated_at", "username"
     ]
   end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[role]
+  end
 end

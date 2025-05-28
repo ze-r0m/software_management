@@ -7,7 +7,10 @@ class CompClassesController < ApplicationController
   # GET /comp_classes or /comp_classes.json
   def index
     @q = policy_scope(CompClass).includes(:cafedra).ransack(params[:q])
-    @comp_classes = @q.result.page(params[:page]).per(per_page)
+    @comp_classes = @q.result
+                      .page(params[:page])
+                      .per(per_page)
+
     @current_per_page = per_page
 
     @all_filtered_comp_class_auds = @q.result(distinct: true).pluck(:aud_number)
