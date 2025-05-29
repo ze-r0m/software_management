@@ -115,8 +115,21 @@
     </div>
   </nav>
 
+  <%# if @errors.present? %>
+<!--    <div class="alert alert-danger mt-3">-->
+<!--      <ul class="mb-0">-->
+        <%# @errors.each do |error| %>
+<!--          <li><%#= error %></li>-->
+        <%# end %>
+<!--      </ul>-->
+<!--    </div>-->
+  <%# end %>
+
+<!--  <div id="flash-container" class="position-fixed top-0 start-50 translate-middle-x mt-3 z-3" style="width: 50%; z-index: 2000;"></div>-->
+
 
   <div class="container-fluid py-3 flex-grow-1">
+    <div id="flash-container">
     <% flash.each do |type, message| %>
       <% alert_class = case type.to_sym
                        when :notice then "alert alert-success alert-dismissible fade show"
@@ -130,7 +143,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
       </div>
     <% end %>
-
+      </div>
 
     <%= yield %>
   </div>
