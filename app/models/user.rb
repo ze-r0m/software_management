@@ -4,22 +4,39 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :trackable
   attr_accessor :change_password
 
-  # если нужно, чтобы по-умолчанию новый юзер — модератор
+  # Валидации
+  validates :username,
+            presence: { message: "не может быть пустым" },
+            uniqueness: { message: "уже занят" },
+            length: { in: 2..20, message: "должен быть от 2 до 20 символов" }
+
+  validates :role_id, presence: { message: "должна быть выбрана" }
+
+  validate :password_presence_if_needed
+
+  # По умолчанию новый пользователь — модератор (если роль не указана)
   after_initialize do
     if new_record? && role.nil?
       self.role = Role.find_by(name: 'moderator')
     end
   end
 
-  def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "current_sign_in_at", "current_sign_in_ip",
-     "email", "encrypted_password", "id", "id_value", "last_sign_in_at",
-     "last_sign_in_ip", "remember_created_at", "reset_password_sent_at",
-     "reset_password_token", "role_id", "sign_in_count", "updated_at", "username"
-    ]
-  end
+  private
 
-  def self.ransackable_associations(auth_object = nil)
-    %w[role]
+  # Проверка пароля только если нужно сменить пароль (change_password == '1')
+  def password_presence_if_needed
+    return unless change_password.to_s == '1'
+
+    if password.blank?
+      errors.add(:password, "не может быть пустым")
+    end
+
+    if password_confirmation.blank?
+      errors.add(:password_confirmation, "не может быть пустым")
+    end
+
+    if password.present? && password_confirmation.present? && password != password_confirmation
+      errors.add(:password_confirmation, "не совпадает с паролем")
+    end
   end
 end

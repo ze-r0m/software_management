@@ -1,7 +1,10 @@
 <thead class="table-light">
 <tr>
   <th>
-    <%= search_field_tag "q[name_cont]", params.dig(:q, :name_cont), placeholder: "Название кафедры", class: "form-control form-control-sm auto-search" %>
+    <%= search_field_tag "q[name_cont]", params.dig(:q, :name_cont),
+                         placeholder: "Название кафедры",
+                         class: "form-control form-control-sm auto-search",
+                         maxlength: 255 %>
   </th>
   <th>
     <div class="dropdown w-100">
@@ -27,11 +30,14 @@
     </div>
   </th>
   <th>
-    <%= search_field_tag "q[add_note_cont]", params.dig(:q, :add_note_cont), placeholder: "Примечания", class: "form-control form-control-sm auto-search" %>
+    <%= search_field_tag "q[add_note_cont]", params.dig(:q, :add_note_cont),
+                         placeholder: "Примечания",
+                         class: "form-control form-control-sm auto-search",
+                         maxlength: 255 %>
   </th>
   <th class="text-end">
     <div class="d-flex gap-2 align-content-end justify-content-end">
-      <%= link_to 'Очистить', request.path, class: 'btn btn-secondary btn-sm', data: { turbo_method: :get, turbo_action: :advance } %>
+      <%= button_tag 'Очистить', type: 'button', class: 'btn btn-secondary btn-sm', id: 'reset-filters' %>
     </div>
   </th>
 </tr>
@@ -40,6 +46,28 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("reset-filters")?.addEventListener("click", function () {
+            const form = document.getElementById("search-form");
+            if (!form) return;
+
+            form.querySelectorAll("input[type='text'], input[type='number'], input[type='date'], input[type='search']").forEach(input => {
+                input.value = "";
+            });
+
+            form.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach(input => {
+                input.checked = false;
+            });
+
+            form.querySelectorAll("select").forEach(select => {
+                select.selectedIndex = 0;
+            });
+
+            const sortInput = form.querySelector("input[name='q[s]']");
+            if (sortInput) sortInput.value = "";
+
+            Rails.fire(form, 'submit');
+        });
+
         // Авто-поиск при вводе текста
         document.querySelectorAll(".auto-search").forEach(input => {
             input.addEventListener("input", function() {

@@ -3,14 +3,14 @@
     <div class="card-body">
       <div class="mb-3">
         <%= form.label :name, "Название кафедры", class: 'form-label' %>
-        <%= form.text_field :name, class: 'form-control', required: true %>
+        <%= form.text_field :name, class: 'form-control'%>
       </div>
 
       <div class="mb-3">
         <%= form.label :faculty_id, "Факультет", class: 'form-label' %>
         <%= form.collection_select :faculty_id, Faculty.all, :id, :name,
                                    { prompt: "Выберите факультет" },
-                                   { class: 'form-select', required: true } %>
+                                   { class: 'form-select'} %>
       </div>
 
       <div class="mb-3">

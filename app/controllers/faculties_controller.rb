@@ -8,6 +8,19 @@ class FacultiesController < ApplicationController
 
   # GET /faculties or /faculties.json
   def index
+    # Проверяем длину параметров поиска
+    if params[:q]
+      if params[:q][:name_cont].present? && params[:q][:name_cont].length > 255
+        flash.now[:alert] = "Фильтр 'Название факультета' слишком длинный<br>"
+        params[:q].delete(:name_cont) # или обрезать строку
+      end
+      if params[:q][:add_note_cont].present? && params[:q][:add_note_cont].length > 255
+        flash.now[:alert] ||= []
+        flash.now[:alert] << "Фильтр 'Примечания' слишком длинный"
+        params[:q].delete(:add_note_cont)
+      end
+    end
+
     @q = policy_scope(Faculty).ransack(params[:q])
     @faculties = @q.result.page(params[:page]).per(per_page)
 
@@ -45,6 +58,7 @@ class FacultiesController < ApplicationController
         format.html { redirect_to @faculty, notice: t('flash.actions.create.notice', model: Faculty.model_name.human) }
         format.json { render :show, status: :created, location: @faculty }
       else
+        flash.now[:alert] = @faculty.errors.full_messages.join("<br>").html_safe
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @faculty.errors, status: :unprocessable_entity }
       end
@@ -59,6 +73,7 @@ class FacultiesController < ApplicationController
         format.html { redirect_to @faculty, notice: t('flash.actions.update.notice', model: Faculty.model_name.human) }
         format.json { render :show, status: :ok, location: @faculty }
       else
+        flash.now[:alert] = @faculty.errors.full_messages.join("<br>").html_safe
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @faculty.errors, status: :unprocessable_entity }
       end

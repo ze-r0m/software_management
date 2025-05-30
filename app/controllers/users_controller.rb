@@ -94,9 +94,10 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to @user, notice: "User was successfully created." }
+        format.html { redirect_to @user, notice: "Пользователь успешно создан!" }
         format.json { render :show, status: :created, location: @user }
       else
+        flash.now[:alert] = @user.errors.full_messages.join("<br>").html_safe
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
@@ -116,6 +117,8 @@ class UsersController < ApplicationController
       if current_user == @user
         unless @user.valid_password?(params[:user][:current_password])
           @user.errors.add(:current_password, 'Неверный текущий пароль')
+
+          flash.now[:alert] = @user.errors.full_messages.join("<br>").html_safe
           return render :edit, status: :unprocessable_entity
         end
       end
@@ -130,6 +133,7 @@ class UsersController < ApplicationController
         format.html { redirect_to target_path, notice: 'Пользователь успешно обновлён.' }
         format.json { render :show, status: :ok, location: @user }
       else
+        flash.now[:alert] = @user.errors.full_messages.join("<br>").html_safe
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end

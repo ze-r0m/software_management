@@ -1,5 +1,13 @@
 # config/locales/ru.yml
 ru:
+  errors:
+    messages:
+      confirmation: "не совпадает со значением поля %{attribute}"
+      too_short: "недостаточной длины (не может быть меньше %{count} символов)"
+      blank: "не может быть пустым"
+      invalid: "некорректное значение"
+      taken: "уже занято"
+
   activerecord:
     models:
       installed_software: "ПО"
@@ -10,6 +18,12 @@ ru:
 
 
     attributes:
+      user:
+        email: "Электронная почта"
+        username: "Имя пользователя"
+        password: "Пароль"
+        password_confirmation: "Подтверждение пароля"
+        current_password: "Текущий пароль"
       installed_software:
         name: "Название"
         version: "Версия"

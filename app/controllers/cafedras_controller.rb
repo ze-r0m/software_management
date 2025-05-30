@@ -6,6 +6,16 @@ class CafedrasController < ApplicationController
 
   # GET /cafedras or /cafedras.json
   def index
+    # Загружаем список всех валидных факультетов
+    allowed_faculties = Faculty.pluck(:name)
+
+    # Очищаем params[:q][:faculty_name_in], оставляя только валидные имена факультетов
+    if params[:q].present? && params[:q][:faculty_name_in].present?
+      params[:q][:faculty_name_in] = Array(params[:q][:faculty_name_in]).select do |faculty_name|
+        allowed_faculties.include?(faculty_name)
+      end
+    end
+
     @q = policy_scope(Cafedra).includes(:faculty).ransack(params[:q])
     @cafedras = @q.result.page(params[:page]).per(per_page)
     @current_per_page = per_page
@@ -44,6 +54,7 @@ class CafedrasController < ApplicationController
         format.html { redirect_to @cafedra, notice: t('flash.actions.create.notice', model: Cafedra.model_name.human) }
         format.json { render :show, status: :created, location: @cafedra }
       else
+        flash.now[:alert] = @cafedra.errors.full_messages.join("<br>").html_safe
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @cafedra.errors, status: :unprocessable_entity }
       end
@@ -58,6 +69,7 @@ class CafedrasController < ApplicationController
         format.html { redirect_to @cafedra, notice: t('flash.actions.update.notice', model: Cafedra.model_name.human) }
         format.json { render :show, status: :ok, location: @cafedra }
       else
+        flash.now[:alert] = @cafedra.errors.full_messages.join("<br>").html_safe
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @cafedra.errors, status: :unprocessable_entity }
       end
