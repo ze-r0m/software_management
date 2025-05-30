@@ -1,15 +1,2 @@
-//document.getElementById("users").innerHTML = "<%= j(render partial: 'table', locals: { users: @users }) %>";
-//document.getElementById("pagination-wrapper").innerHTML = "<%= j(paginate @users, params: request.query_parameters, remote: true) %>";
-
-
-<% if flash.now[:alert] %>
-document.getElementById("flash-container").innerHTML = `
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <%= j flash.now[:alert] %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
-  </div>
-`;
-<% end %>
-
 document.getElementById("users").innerHTML = "<%= j(render partial: 'table', locals: { users: @users }) %>";
 document.getElementById("pagination-wrapper").innerHTML = "<%= j(paginate @users, params: request.query_parameters, remote: true) %>";

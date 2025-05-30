@@ -4,8 +4,6 @@
     <%= f.search_field :username_cont,
                        placeholder: "Логин",
                        class: "form-control form-control-sm auto-search",
-                       # pattern: ".{2,}",
-                       # title: "Минимум 2 символа",
                        value: params.dig(:q, :username_cont) %>
   </th>
   <th>
@@ -16,7 +14,7 @@
   </th>
   <th>
     <%= select_tag 'q[role_id_eq]',
-                   options_for_select([['Все роли', '']] + Role.pluck(:name, :id), selected: params.dig(:q, :role_id_eq)),
+                   options_for_select(@roles_for_select, selected: params.dig(:q, :role_id_eq)),
                    class: 'form-select form-select-sm auto-submit' %>
   </th>
 
@@ -24,10 +22,7 @@
     <%= f.number_field :sign_in_count_gteq,
                        class: "form-control form-control-sm auto-search",
                        placeholder: "Входов ≥",
-                       min: 0,
-                       step: 1,
-                       title: "Число должно быть больше нуля",
-                       value: params.dig(:q, :sign_in_count_gteq) %>
+                       value: params.dig(:q, :sign_in_count_gteq)%>
   </th>
 
 
@@ -35,16 +30,15 @@
     <%= date_field_tag 'q[current_sign_in_at_eq]',
                        params.dig(:q, :current_sign_in_at_eq),
                        class: "form-control form-control-sm auto-submit",
-                       placeholder: "Последний вход" %>
+                       placeholder: "ДД.ММ.ГГГГ",
+                       maxlength: 10,
+                       oninput: "formatDateInput(this)" %>
   </th>
-
-
 
   <th>
     <%= f.search_field :current_sign_in_ip_cont,
                        placeholder: "IP",
                        class: "form-control form-control-sm auto-search",
-                       pattern: "\\A(?:\\d{1,3}\\.){3}\\d{1,3}\\z",
                        title: "Введите IPv4 (например, 192.168.1.1)",
                        value: params.dig(:q, :current_sign_in_ip_cont) %>
   </th>
@@ -53,7 +47,9 @@
     <%= date_field_tag 'q[created_at_eq]',
                        params.dig(:q, :created_at_eq),
                        class: "form-control form-control-sm auto-submit",
-                       placeholder: "Дата регистрации" %>
+                       placeholder: "ДД.ММ.ГГГГ",
+                       maxlength: 10,
+                       oninput: "formatDateInput(this)" %>
   </th>
 
   <th class="text-end">

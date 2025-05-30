@@ -10,42 +10,12 @@ class UsersController < ApplicationController
     @flash = []
     clean_query = params[:q] ||= {}
 
-    # Валидация логина (минимум 2 символа)
-    if clean_query[:username_cont].present? && clean_query[:username_cont].length < 2
-      @flash << "Логин должен содержать не менее 2 символов"
-      clean_query[:username_cont] = nil
-    end
-
-    # Валидация email (если есть, должен быть в валидном формате)
-    if clean_query[:email_cont].present?
-      unless clean_query[:email_cont] =~ URI::MailTo::EMAIL_REGEXP
-        @flash << "Неверный формат email"
-        clean_query[:email_cont] = nil
-      end
-    end
-
-    # Валидация роли (если передана, должна быть ID существующей роли)
-    if clean_query[:role_id_eq].present?
-      unless Role.exists?(id: clean_query[:role_id_eq])
-        @flash << "Выбранная роль не существует"
-        clean_query[:role_id_eq] = nil
-      end
-    end
-
     # Валидация количества входов
     if clean_query[:sign_in_count_gteq].present?
       count = clean_query[:sign_in_count_gteq]
       unless count.to_s =~ /\A\d+\z/
-        @flash << "Количество входов должно быть числом"
+        @flash << "Количество входов должно быть больше 0!"
         clean_query[:sign_in_count_gteq] = nil
-      end
-    end
-
-    # Валидация IP-адреса
-    if clean_query[:current_sign_in_ip_cont].present?
-      unless clean_query[:current_sign_in_ip_cont] =~ /\A(\d{1,3}\.){3}\d{1,3}\z/
-        @flash << "IP должен быть в формате IPv4 (например, 192.168.1.1)"
-        clean_query[:current_sign_in_ip_cont] = nil
       end
     end
 
@@ -82,6 +52,7 @@ class UsersController < ApplicationController
                .order(:email)
                .page(params[:page])
                .per(per_page)
+    @roles_for_select = Role.pluck(:name, :id).unshift(['Все роли', ''])
 
     @current_per_page = per_page
 
