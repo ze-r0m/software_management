@@ -9,9 +9,6 @@ class Cafedra < ApplicationRecord
             uniqueness: { message: "уже существует" },
             length: { maximum: 255, message: "не может быть длиннее %{count} символов" }
 
-  # TODO:: перевод поля по связи
-  # validates :faculty, presence: { message: "должен быть выбран" }
-
   validates :add_note,
             length: { maximum: 255, message: "не может быть длиннее %{count} символов" }
 

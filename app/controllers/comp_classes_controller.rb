@@ -49,6 +49,7 @@ class CompClassesController < ApplicationController
         format.html { redirect_to @comp_class, notice: t('flash.actions.create.notice', model: CompClass.model_name.human) }
         format.json { render :show, status: :created, location: @comp_class }
       else
+        flash.now[:alert] = @comp_class.errors.full_messages.join("<br>").html_safe
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @comp_class.errors, status: :unprocessable_entity }
       end
@@ -63,6 +64,7 @@ class CompClassesController < ApplicationController
         format.html { redirect_to @comp_class, notice: t('flash.actions.update.notice', model: CompClass.model_name.human) }
         format.json { render :show, status: :ok, location: @comp_class }
       else
+        flash.now[:alert] = @comp_class.errors.full_messages.join("<br>").html_safe
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @comp_class.errors, status: :unprocessable_entity }
       end

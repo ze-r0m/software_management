@@ -25,20 +25,20 @@ ru:
         password_confirmation: "Подтверждение пароля"
         current_password: "Текущий пароль"
       installed_software:
-        name: "Название"
+        name: "Название ПО"
         version: "Версия"
         license_expiry: "Истечение лицензии"
       cafedra:
-        name: "Название"
+        name: "Название кафедры"
         add_note: "Дополнительная заметка"
-        faculty_id: "Факультет"
+        faculty: "Факультет"
       faculty:
         name: "Название факультета"
         add_note: "Дополнительная заметка"
       comp_class:
         aud_number: "Номер аудитории"
         count_seat: "Количество мест"
-        count_comp_seat: "Количество мест с компьютерами"
+        count_comp_seat: "Количество мест за компьютерами"
         count_comp: "Количество компьютеров"
         spec_purpose: "Специальное назначение"
         projector: "Проектор"

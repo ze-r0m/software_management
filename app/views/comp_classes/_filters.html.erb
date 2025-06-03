@@ -1,6 +1,6 @@
 <thead class="table-light">
 <tr>
-  <!--              фильтр аудиторий-->
+  <!--фильтр аудиторий-->
   <th class="start">
     <div class="dropdown w-100">
       <button class="form-control form-control-sm dropdown-toggle text-start"
@@ -28,7 +28,7 @@
       </div>
     </div>
   </th>
-  <!--              фильтр кафедр-->
+  <!--фильтр кафедр-->
   <th>
     <div class="dropdown w-100">
       <button class="form-control form-control-sm dropdown-toggle text-start"
@@ -57,24 +57,41 @@
   </th>
   <!-- фильтр посадочных мест -->
   <th>
-    <%= f.search_field :count_seat_eq,
-                       # placeholder: "Фильтр посад мест",
+    <%= f.number_field :count_seat_eq,
                        class: "form-control form-control-sm auto-search",
-                       value: params.dig(:q, :count_seat_eq) %>
+                       value: params.dig(:q, :count_seat_eq),
+                       inputmode: "numeric",
+                       min: 1,
+                       step: 1,
+                       max: 999,
+                       title: "Введите положительное целое число"
+    %>
   </th>
   <!-- фильтр кол-во ПК -->
   <th>
-    <%= f.search_field :count_comp_eq,
+    <%= f.number_field :count_comp_eq,
                        # placeholder: "Фильтр кол-во пк",
                        class: "form-control form-control-sm auto-search",
-                       value: params.dig(:q, :count_comp_eq) %>
+                       value: params.dig(:q, :count_comp_eq),
+                       inputmode: "numeric",
+                       min: 1,
+                       step: 1,
+                       max: 999,
+                       title: "Введите положительное целое число"
+    %>
   </th>
   <!-- фильтр посад за ПК -->
   <th>
-    <%= f.search_field :count_comp_seat_eq,
+    <%= f.number_field :count_comp_seat_eq,
                        # placeholder: "Фильтр кол-во посад за пк",
                        class: "form-control form-control-sm auto-search",
-                       value: params.dig(:q, :count_comp_seat_eq) %>
+                       value: params.dig(:q, :count_comp_seat_eq),
+                       inputmode: "numeric",
+                       min: 1,
+                       step: 1,
+                       max: 999,
+                       title: "Введите положительное целое число"
+    %>
   </th>
   <!-- Фильтр "Проектор" -->
   <th>
@@ -96,16 +113,16 @@
   </th>
   <!-- Фильтр спецназнач-->
   <th>
-    <%= f.search_field :spec_purpose_cont, placeholder: "Спецназнач", class: "form-control form-control-sm auto-search", value: params.dig(:q, :spec_purpose_cont) %>
+    <%= f.search_field :spec_purpose_cont, placeholder: "Спецназнач", class: "form-control form-control-sm auto-search", value: params.dig(:q, :spec_purpose_cont), maxlength: 50 %>
   </th>
   <!-- Кнопка сброса -->
-
-
-
-  <th class="text-end text-nowrap" id="comp-classes-actions-cell">
-    <div class="d-inline-flex gap-2 flex-nowrap">
-      <%= render partial: 'actions_buttons',
-                 locals: { all_filtered: @all_filtered_comp_class_auds } %>
+  <th class="text-end text-nowrap">
+    <div class="d-inline-flex gap-2 flex-nowrap align-content-end justify-content-end">
+      <%= link_to installed_softwares_path(q: { comp_classes_aud_number_in: @all_filtered_comp_class_auds }),
+                  class: 'btn btn-warning btn-sm ',
+                  title: 'ПО для фильтрованных аудиторий',
+                  data: { bs_toggle: "tooltip" } do %> <i class="bi bi-hdd-fill text-white"></i> <% end %>
+      <%= button_tag 'Очистить', type: 'button', class: 'btn btn-secondary btn-sm', id: 'reset-filters' %>
     </div>
   </th>
 </tr>
@@ -113,6 +130,28 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("reset-filters")?.addEventListener("click", function () {
+            const form = document.getElementById("search-form");
+            if (!form) return;
+
+            // Очистить текстовые, числовые, поисковые поля
+            form.querySelectorAll("input[type='text'], input[type='number'], input[type='date'], input[type='search']").forEach(input => {
+                input.value = "";
+            });
+
+            // Снять все галочки
+            form.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach(input => {
+                input.checked = false;
+            });
+
+            // Сбросить выпадающие списки
+            form.querySelectorAll("select").forEach(select => {
+                select.selectedIndex = 0;
+            });
+
+            Rails.fire(form, 'submit');
+        });
+
         function setupDropdownSearch(inputId, dropdownSelector, checkboxClass) {
             const searchInput = document.getElementById(inputId);
             if (searchInput) {
