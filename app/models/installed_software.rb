@@ -8,6 +8,15 @@ class InstalledSoftware < ApplicationRecord
     where.not(id: ClassSoftware.select(:installed_software_id).distinct)
   }
 
+  ransacker :pc_count_sum do
+    Arel.sql(
+      '(SELECT COALESCE(SUM(comp_classes.count_comp), 0)
+      FROM class_softwares
+      INNER JOIN comp_classes ON comp_classes.id = class_softwares.comp_class_id
+      WHERE class_softwares.installed_software_id = installed_softwares.id)'
+    )
+  end
+
   def pc_count_sum
     comp_classes.sum(:count_comp)
   end
@@ -23,9 +32,7 @@ class InstalledSoftware < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["name", "version", "start_date", "finish_date", "keyholder", "is_server"]
+    ["name", "version", "start_date", "finish_date", "keyholder", "is_server", "pc_count_sum"]
   end
-
-
 
 end

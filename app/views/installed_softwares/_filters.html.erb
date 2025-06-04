@@ -1,11 +1,19 @@
 <thead class="table-light">
 <tr>
   <th>
-    <%= f.search_field :name_cont, placeholder: "Поиск", class: "form-control form-control-sm auto-search" %>
+    <%= f.search_field :name_cont,
+                       placeholder: "Поиск",
+                       class: "form-control form-control-sm auto-search",
+                       maxlength: 255 %>
   </th>
+
   <th>
-    <%= f.search_field :version_cont, placeholder: "Поиск", class: "form-control form-control-sm auto-search" %>
+    <%= f.search_field :version_cont,
+                       placeholder: "Поиск",
+                       class: "form-control form-control-sm auto-search",
+                       maxlength: 255 %>
   </th>
+
   <!--фильтр по периоду действия-->
   <th>
     <div class="dropdown w-100">
@@ -47,8 +55,12 @@
       </div>
     </div>
   </th>
+
   <th>
-    <%= f.search_field :keyholder_cont, placeholder: "Поиск", class: "form-control form-control-sm auto-search" %>
+    <%= f.search_field :keyholder_cont,
+                       placeholder: "Поиск",
+                       class: "form-control form-control-sm auto-search",
+                       maxlength: 255 %>
   </th>
 
   <!--Фильтр по аудиториям-->
@@ -91,20 +103,24 @@
     </div>
   </th>
 
-  <th></th>
+  <th>
+    <%= f.number_field :pc_count_sum_eq,
+                       class: "form-control form-control-sm auto-search",
+                       inputmode: "numeric",
+                       min: 0,
+                       step: 1,
+                       max: 999,
+                       placeholder: "∑"%>
+  </th>
 
   <th class="text-end">
     <div class="d-flex gap-2 align-content-end justify-content-end">
-      <%#= link_to 'Очистить', request.path, class: 'btn btn-secondary btn-sm', data: { turbo_method: :get, turbo_action: :advance } %>
       <%= button_tag 'Очистить', type: 'button', class: 'btn btn-secondary btn-sm', id: 'reset-filters' %>
 
     </div>
   </th>
 </tr>
 </thead>
-
-
-
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
