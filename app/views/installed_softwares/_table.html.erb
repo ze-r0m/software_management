@@ -22,6 +22,9 @@
     </td>
 
     <td class="text-center"><%= truncate(software.version, length: 8) %></td>
+
+    <td class="text-center"><%= software.quantity %></td>
+
     <td class="text-center">
       <% if software.start_date && software.finish_date %>
         <%= software.start_date.strftime('%d.%m.%Y') %>&nbsp;—&nbsp;<%= software.finish_date.strftime('%d.%m.%Y') %>

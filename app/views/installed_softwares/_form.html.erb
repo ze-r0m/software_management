@@ -15,11 +15,15 @@
               <%= form.text_field :note, class: 'form-control', maxlength: 8, placeholder: '8 симв.' %>
             </div>
             <div class="row align-items-center g-3">
-              <div class="col-md-5">
+              <div class="col-md-4">
                 <%= form.label :version, 'Версия', class: 'form-label' %>
                 <%= form.text_field :version, class: 'form-control', required: true, placeholder: 'Напр. 2021' %>
               </div>
-              <div class="col-md-5 d-flex align-items-center">
+              <div class="col-md-4">
+                <%= form.label :quantity, 'Количество лицензий', class: 'form-label' %>
+                <%= form.number_field :quantity, class: 'form-control', min: 1, placeholder: 'Напр. 25' %>
+              </div>
+              <div class="col-md-4 d-flex align-items-center">
                 <div class="form-check form-switch">
                   <%= form.label :is_server, 'Серверное ПО', class: 'form-check-label', for: 'server-switch' %>
                   <%= form.check_box :is_server, class: 'form-check-input', id: 'server-switch' %>
@@ -46,14 +50,32 @@
       </div>
 
       <hr class="my-4">
-      <!-- Дополнительная информация -->
+      <h5 class="mb-3">Дополнительно</h5>
       <div class="row gx-4 gy-3 mb-4">
-        <h5 class="mb-3 col-md-3">Дополнительно</h5>
-        <div class="col-md-9">
+        <!-- Держатель ключа и Назначение -->
+        <div class="col-md-6">
           <%= form.label :keyholder, 'Держатель ключа', class: 'form-label' %>
           <%= form.text_field :keyholder, class: 'form-control', placeholder: 'Иванов И.И., +7 999 123-45-67' %>
         </div>
+
+        <div class="col-md-6">
+          <%= form.label :purpose, 'Назначение', class: 'form-label d-block' %>
+          <% purposes = ['Обеспечивающее', 'Учебное', 'Служебное', 'Коммерческое', 'Прочее'] %>
+          <% purposes.each do |label| %>
+            <div class="form-check form-check-inline">
+              <%= check_box_tag 'installed_software[purpose][]', label, @installed_software.purpose&.include?(label), id: "purpose_#{label.parameterize}", class: 'form-check-input' %>
+              <%= label_tag "purpose_#{label.parameterize}", label, class: 'form-check-label' %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Основание использования -->
+        <div class="col-12">
+          <%= form.label :usage_basis, 'Основание использования', class: 'form-label' %>
+          <%= form.text_area :usage_basis, class: 'form-control', rows: 3, placeholder: 'Лицензионный договор №...' %>
+        </div>
       </div>
+
 
       <hr class="my-4">
       <!-- Блок Аудитории -->

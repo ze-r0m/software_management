@@ -118,8 +118,8 @@ auditoriums = [
   ['8-802', 28, 22, false, true, true, 'Лаборатория для прототипирования', Cafedra.find_by(name: 'ПИ')],
   ['9-901', 30, 28, true, false, false, 'Лаборатория искусственного интеллекта', Cafedra.find_by(name: 'ПОВТиАС')],
   ['9-902', 25, 20, true, true, true, 'Класс для работы с Python', Cafedra.find_by(name: 'ТТПП')],
-  ['10-1001', 35, 30, true, true, true, 'Лаборатория для инженерии', Cafedra.find_by(name: 'ТФиХОМ')],
-  ['10-1002', 30, 25, false, true, true, 'Пространство для студентов по ОКП', Cafedra.find_by(name: 'ФВ')],
+  ['10-101', 35, 30, true, true, true, 'Лаборатория для инженерии', Cafedra.find_by(name: 'ТФиХОМ')],
+  ['10-102', 30, 25, false, true, true, 'Пространство для студентов по ОКП', Cafedra.find_by(name: 'ФВ')],
   ['11-101', 30, 28, true, true, true, 'Класс для хардварных проектов', Cafedra.find_by(name: 'ЭМ')],
   ['11-102', 28, 24, true, false, false, 'Класс для робототехники', Cafedra.find_by(name: 'АПП')],
   ['12-201', 32, 28, false, true, true, 'Лаборатория для биоинженерии', Cafedra.find_by(name: 'БЖиЗОС')],
@@ -149,12 +149,12 @@ end
 
 puts "Создание установленного ПО..."
 software_list = [
-  ['Microsoft Office', '2021', Date.new(2023, 1, 1), Date.new(2025, 12, 31), 'Иванов И.И.', false, 'офис'],
-  ['Adobe Photoshop', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31), 'Дизайн-отдел', false, 'дизайн'],
-  ['Visual Studio', '2022', Date.new(2024, 1, 1), Date.new(2026, 12, 31), 'Петров П.П.', false, 'dev'],
-  ['AutoCAD', '2024', Date.new(2024, 3, 1), Date.new(2025, 12, 31), 'Архитектура', false, 'cad'],
-  ['Blender', '3.6', Date.new(2023, 5, 1), Date.new(2025, 5, 1), '3D-отдел', false, '3d'],
-  ['MATLAB', 'R2023b', Date.new(2023, 9, 1), Date.new(2026, 8, 31), 'Лаб. моделирования', false, 'наука'],
+  ['Microsoft Office', '2021', Date.new(2023, 1, 1), Date.new(2025, 12, 31), 'Иванов И.И.', false, 'офис', 554, 'Tr34543564363 от 14.06.2024. Контрагент Донской государственный технический университет', ['обеспечивающее', 'учебное']],
+  ['Adobe Photoshop', 'CC 2023', Date.new(2023, 6, 1), Date.new(2024, 5, 31), 'Дизайн-отдел', false, 'дизайн', 435, 'Сублицензионный договор от 13 апреля№ЛС-9999-9999', 'обеспечивающее'],
+  ['Visual Studio', '2022', Date.new(2024, 1, 1), Date.new(2026, 12, 31), 'Петров П.П.', false, 'dev', 150, 'Договор от 01.03.2024 №333/пьрТ', ['учебное']],
+  ['AutoCAD', '2024', Date.new(2024, 3, 1), Date.new(2025, 12, 31), 'Архитектура', false, 'cad', 1000, 'Договор от 01.03.2454 №143/ИТ', ['учебное', 'обеспечивающее']],
+  ['Blender', '3.6', Date.new(2023, 5, 1), Date.new(2025, 5, 1), '3D-отдел', false, '3d', 456, 'Договор от 03.03.2444 №673/рьпрбо', ['учебное']],
+  ['MATLAB', 'R2023b', Date.new(2023, 9, 1), Date.new(2026, 8, 31), 'Лаб. моделирования', false, 'наука', 100, 'Договор от 01.03.2024 №123/ИТ', ['учебное', 'обеспечивающее']],
   ['LibreOffice', '7.6', Date.new(2024, 2, 1), Date.new(2025, 12, 31), 'Бухгалтерия', false, 'офис'],
   ['MySQL', '8.0', Date.new(2023, 2, 1), Date.new(2026, 1, 31), 'Сисадмин', true, 'сервер'],
   ['PostgreSQL', '15.0', Date.new(2024, 1, 1), Date.new(2027, 12, 31), 'DevOps', true, 'сервер'],
@@ -175,7 +175,7 @@ software_list = [
   ['Cinema 4D', 'R23', Date.new(2021, 3, 1), Date.new(2023, 3, 1), 'Видео студия', false, 'архив']
 ]
 
-softwares = software_list.map do |name, version, start_date, end_date, keyholder, is_server, note|
+softwares = software_list.map do |name, version, start_date, end_date, keyholder, is_server, note, quantity, usage_basis, purpose|
   InstalledSoftware.create!(
     name: name,
     version: version,
@@ -183,7 +183,10 @@ softwares = software_list.map do |name, version, start_date, end_date, keyholder
     finish_date: end_date,
     keyholder: keyholder,
     is_server: is_server,
-    note: note
+    note: note,
+    quantity: quantity,
+    usage_basis: usage_basis,
+    purpose: purpose
   )
 end
 

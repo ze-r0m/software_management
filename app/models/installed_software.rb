@@ -8,6 +8,9 @@ class InstalledSoftware < ApplicationRecord
     where.not(id: ClassSoftware.select(:installed_software_id).distinct)
   }
 
+  # TODO::разобрать сериализацию и как отобразить из массива в чекбоксы
+  serialize :purpose, coder:JSON
+
   ransacker :pc_count_sum do
     Arel.sql(
       '(SELECT COALESCE(SUM(comp_classes.count_comp), 0)
