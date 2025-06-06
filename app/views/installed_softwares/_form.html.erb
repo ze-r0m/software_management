@@ -59,13 +59,18 @@
         </div>
 
         <div class="col-md-6">
-          <%= form.label :purpose, 'Назначение', class: 'form-label d-block' %>
-          <% purposes = ['Обеспечивающее', 'Учебное', 'Служебное', 'Коммерческое', 'Прочее'] %>
-          <% purposes.each do |label| %>
-            <div class="form-check form-check-inline">
-              <%= check_box_tag 'installed_software[purpose][]', label, @installed_software.purpose&.include?(label), id: "purpose_#{label.parameterize}", class: 'form-check-input' %>
-              <%= label_tag "purpose_#{label.parameterize}", label, class: 'form-check-label' %>
-            </div>
+          <%#= form.label :purpose, 'Назначение', class: 'form-label d-block' %>
+          <%# purposes = ['Обеспечивающее', 'Учебное', 'Служебное', 'Коммерческое', 'Прочее'] %>
+          <%# purposes.each do |label| %>
+<!--            <div class="form-check form-check-inline">-->
+              <%#= check_box_tag 'installed_software[purpose][]', label, @installed_software.purpose&.include?(label), id: "purpose_#{label.parameterize}", class: 'form-check-input' %>
+              <%#= label_tag "purpose_#{label.parameterize}", label, class: 'form-check-label' %>
+<!--            </div>-->
+          <%# end %>
+          <%= form.label :purpose, "Назначение", class: 'form-label'  %><br>
+          <% ["учебное", "обеспечивающее"].each do |value| %>
+            <%= check_box_tag "installed_software[purpose][]", value, Array(@installed_software.purpose).include?(value), id: "purpose_#{value}" %>
+            <%= label_tag "purpose_#{value}", value %><br>
           <% end %>
         </div>
 
