@@ -41,9 +41,15 @@
               <%= form.label :start_date, 'Начало', class: 'form-label' %>
               <%= form.date_field :start_date, class: 'form-control' %>
             </div>
+
+            <div class="form-check form-switch mb-2">
+              <%= check_box_tag :is_perpetual, '1', @installed_software.finish_date.nil?, id: "is_perpetual_checkbox", class: "form-check-input" %>
+              <%= label_tag :is_perpetual, "Бессрочная лицензия", class: "form-check-label", for: "is_perpetual_checkbox" %>
+            </div>
+
             <div class="col-md-12">
               <%= form.label :finish_date, 'Окончание', class: 'form-label' %>
-              <%= form.date_field :finish_date, class: 'form-control' %>
+              <%= form.date_field :finish_date, class: 'form-control', id: 'finish_date_field' %>
             </div>
           </div>
         </div>
@@ -59,14 +65,6 @@
         </div>
 
         <div class="col-md-6">
-          <%#= form.label :purpose, 'Назначение', class: 'form-label d-block' %>
-          <%# purposes = ['Обеспечивающее', 'Учебное', 'Служебное', 'Коммерческое', 'Прочее'] %>
-          <%# purposes.each do |label| %>
-<!--            <div class="form-check form-check-inline">-->
-              <%#= check_box_tag 'installed_software[purpose][]', label, @installed_software.purpose&.include?(label), id: "purpose_#{label.parameterize}", class: 'form-check-input' %>
-              <%#= label_tag "purpose_#{label.parameterize}", label, class: 'form-check-label' %>
-<!--            </div>-->
-          <%# end %>
           <%= form.label :purpose, "Назначение", class: 'form-label'  %><br>
           <% ["учебное", "обеспечивающее"].each do |value| %>
             <%= check_box_tag "installed_software[purpose][]", value, Array(@installed_software.purpose).include?(value), id: "purpose_#{value}" %>
@@ -91,16 +89,18 @@
       <%= hidden_field_tag "installed_software[comp_class_ids][]", "" %>
       <div class="row gx-4 gy-3 mb-4">
         <!-- триггер дропдауна -->
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div id="aud-dropdown-wrapper" class="position-relative w-100">
             <button id="aud-dropdown-btn" class="form-control form-control-sm text-start" type="button">
               Выбрать аудиторию…
             </button>
-            <div id="aud-dropdown-menu" class="dropdown-menu p-3 shadow w-100" style="max-height: 40vh; overflow-y: auto; display: none;">
+            <div id="aud-dropdown-menu" class="dropdown-menu p-3 shadow w-100" style="bottom: 100%">
               <!-- поле поиска -->
-              <input id="aud-search" type="text" class="form-control form-control-sm mb-2" placeholder="Поиск…">
+              <div class="border-bottom sticky-top bg-white">
+                <input id="aud-search" type="text" class="form-control form-control-sm mb-2" placeholder="Поиск…">
+              </div>
               <!-- список пунктов -->
-              <div id="aud-list">
+              <div id="aud-list" style="max-height: 30vh; overflow-y: auto;" class="p-3 pt-2">
                 <% CompClass.order(:aud_number).distinct.each do |comp| %>
                   <div class="aud-item py-1 px-2 mb-1 rounded" data-id="<%= comp.id %>" data-text="<%= comp.aud_number %>" data-count="<%= comp.count_comp %>" style="cursor: pointer;">
                     <%= comp.aud_number %> (<%= comp.count_comp %>)
@@ -112,7 +112,7 @@
         </div>
 
         <!-- Контейнер для бейджей -->
-        <div class="col-md-6">
+        <div class="col-md-8">
           <div id="selected-auditoriums" class="d-flex flex-wrap align-items-center gap-2">
             <% @installed_software.comp_classes.each do |aud| %>
               <span class="badge bg-success d-inline-flex align-items-center" data-id="<%= aud.id %>" data-text="<%= aud.aud_number %>" data-count="<%= aud.count_comp %>">
@@ -234,5 +234,20 @@
 
         // Инициация суммы на старте
         recalc();
+
+        const checkbox = document.getElementById("is_perpetual_checkbox");
+        const dateField = document.getElementById("finish_date_field");
+
+        function toggleDateField() {
+            if (checkbox.checked) {
+                dateField.disabled = true;
+                dateField.value = "";
+            } else {
+                dateField.disabled = false;
+            }
+        }
+
+        checkbox.addEventListener("change", toggleDateField);
+        toggleDateField(); // запускается при загрузке страницы
     });
 </script>

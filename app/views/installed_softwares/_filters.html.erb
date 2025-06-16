@@ -14,7 +14,14 @@
                        maxlength: 255 %>
   </th>
 
-  <th></th>
+  <th>
+    <%= f.number_field :quantity_eq,
+                       class: "form-control form-control-sm auto-search",
+                       inputmode: "numeric",
+                       min: 0,
+                       step: 1,
+                       max: 999%>
+  </th>
 
   <!--фильтр по периоду действия-->
   <th>
@@ -44,6 +51,7 @@
             'today' => 'Сегодня',
             'this_month' => 'В этом месяце',
             'this_year' => 'В этом году',
+            'permanent' => 'Бессрочные',
             'expired' => 'Просроченные'
           } %>
 
@@ -188,7 +196,7 @@
             if (!form) return;
 
             // Очистка текстовых и поисковых полей
-            form.querySelectorAll("input[type='text'], input[type='date'], input[type='search']").forEach(input => {
+            form.querySelectorAll("input[type='text'], input[type='date'], input[type='search'], input[type='number']").forEach(input => {
                 input.value = "";
             });
 

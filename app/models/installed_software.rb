@@ -8,7 +8,6 @@ class InstalledSoftware < ApplicationRecord
     where.not(id: ClassSoftware.select(:installed_software_id).distinct)
   }
 
-  # TODO::разобрать сериализацию и как отобразить из массива в чекбоксы
   serialize :purpose, coder:JSON
 
   ransacker :pc_count_sum do
@@ -35,7 +34,7 @@ class InstalledSoftware < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["name", "version", "start_date", "finish_date", "keyholder", "is_server", "pc_count_sum"]
+    ["name", "version", "start_date", "finish_date", "keyholder", "is_server", "pc_count_sum", "quantity"]
   end
 
 end
