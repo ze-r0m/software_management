@@ -68,6 +68,7 @@ class InstalledSoftwaresController < ApplicationController
         format.html { redirect_to @installed_software, notice: t('flash.actions.create.notice', model: InstalledSoftware.model_name.human) }
         format.json { render :show, status: :created, location: @installed_software }
       else
+        flash.now[:alert] = @installed_software.errors.full_messages.join("<br>").html_safe
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @installed_software.errors, status: :unprocessable_entity }
       end
@@ -86,6 +87,7 @@ class InstalledSoftwaresController < ApplicationController
         format.html { redirect_to @installed_software, notice: t('flash.actions.update.notice', model: InstalledSoftware.model_name.human) }
         format.json { render :show, status: :ok, location: @installed_software }
       else
+        flash.now[:alert] = @installed_software.errors.full_messages.join("<br>").html_safe
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @installed_software.errors, status: :unprocessable_entity }
       end
