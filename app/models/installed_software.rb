@@ -6,7 +6,7 @@ class InstalledSoftware < ApplicationRecord
 
   validates :name, length: { maximum: 32 }, presence: true
   validates :version, presence: true
-  validates :quantity, numericality: { only_integer: true, greater_than: 0 }, allow_blank: true
+  validates :quantity, numericality: { only_integer: true, greater_than: 0 }, presence: true
   validates :note, length: { maximum: 8 }, allow_blank: true
 
   validates :keyholder, length: { maximum: 64 }, allow_blank: true

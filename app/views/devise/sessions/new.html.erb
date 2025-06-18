@@ -1,42 +1,59 @@
-<div class="mt-5">
-  <h2 class="text-center mb-4">Вход в систему</h2>
+<div class="min-vh-100 d-flex justify-content-center align-items-center bg-light py-5">
+<div class="w-100" style="max-width: 420px;">
 
-  <div class="card mx-auto shadow-sm" style="max-width: 400px; border-radius: 10px;">
-    <div class="card-body p-4">
-      <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'needs-validation', novalidate: true }) do |f| %>
-
-        <!-- Поле Email -->
-        <div class="mb-3">
-          <%= f.label :email, 'Электронная почта', class: 'form-label' %>
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control', required: true %>
-        </div>
-
-        <!-- Поле Пароль -->
-        <div class="mb-3">
-          <%= f.label :password, 'Пароль', class: 'form-label' %>
-          <%= f.password_field :password, autocomplete: "current-password", class: 'form-control', required: true %>
-        </div>
-
-        <!-- Чекбокс Запомнить меня -->
-        <% if devise_mapping.rememberable? %>
-          <div class="mb-3 form-check">
-            <%= f.check_box :remember_me, class: 'form-check-input' %>
-            <%= f.label :remember_me, 'Запомнить меня', class: 'form-check-label' %>
-          </div>
-        <% end %>
-
-        <!-- Кнопка входа -->
-        <div class="d-grid">
-          <%= f.submit "Войти", class: 'btn btn-primary' %>
-        </div>
-
-      <% end %>
-
-      <!-- Ссылка на восстановление пароля -->
-<!--      <div class="text-center mt-3">-->
-        <%#= link_to 'Забыли пароль?', new_password_path(resource_name), class: 'text-muted small' %>
-<!--      </div>-->
-    </div>
+    <!-- Логотип -->
+  <div class="text-center mb-3">
+    <%= image_tag 'logo.png',
+                  alt: 'Логотип',
+                  class: 'shadow-sm rounded-4 object-fit-cover',
+                  style: 'width: 128px; height: 128px;' %>
   </div>
 
+
+
+  <!-- Название системы -->
+    <h4 class="text-center fw-bold mb-1">Система управления лицензиями программного обеспечения</h4>
+    <p class="text-center text-muted small mb-4">Управление цифровых образовательных технологий</p>
+
+    <!-- Форма -->
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-body p-4">
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'needs-validation', novalidate: true }) do |f| %>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <%= f.label :email, 'Электронная почта', class: 'form-label' %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control', required: true %>
+          </div>
+
+          <!-- Пароль -->
+          <div class="mb-3">
+            <%= f.label :password, 'Пароль', class: 'form-label' %>
+            <%= f.password_field :password, autocomplete: "current-password", class: 'form-control', required: true %>
+          </div>
+
+          <!-- Чекбокс -->
+          <% if devise_mapping.rememberable? %>
+            <div class="form-check mb-3">
+              <%= f.check_box :remember_me, class: 'form-check-input' %>
+              <%= f.label :remember_me, 'Запомнить меня', class: 'form-check-label' %>
+            </div>
+          <% end %>
+
+          <!-- Кнопка -->
+          <div class="d-grid">
+            <%= f.submit "Войти", class: 'btn btn-info text-white fw-semibold' %>
+          </div>
+
+        <% end %>
+
+        <!-- Восстановление пароля -->
+        <div class="text-center mt-3">
+          <%#= link_to 'Забыли пароль?', new_password_path(resource_name), class: 'text-muted small' %>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-muted small mb-1 p-4">Донской Государственный Технический Университет</p>
+
+  </div>
 </div>
