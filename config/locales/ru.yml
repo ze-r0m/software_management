@@ -27,7 +27,11 @@ ru:
       installed_software:
         name: "Название ПО"
         version: "Версия"
-        license_expiry: "Истечение лицензии"
+        quantity: "Количество лицензий"
+        note: "Отметка"
+        start_date: "Начало"
+        finish_date: "Окончание"
+        keyholder: "Держатель ключа"
         usage_basis: "Основание использования"
       cafedra:
         name: "Название кафедры"

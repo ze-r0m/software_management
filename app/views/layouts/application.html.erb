@@ -37,14 +37,13 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-info">
     <div class="container-fluid">
       <ul class="navbar-nav flex-row">
-        <li class="nav-item me-3">
-          <%= link_to root_path, class: "navbar-brand d-flex align-items-center justify-content-center px-3 py-1 #{'active' if current_page?(root_path)}", style: "height: 48px;" do %>
+        <li class="nav-item">
+          <%= link_to root_path, class: " d-flex align-items-center justify-content-center px-2 #{'active' if current_page?(root_path)}", style: "height: 48px;" do %>
             <%= image_tag 'logo.png',
                           alt: 'Логотип',
-                          height: 64,
-                          width: 64,
+                          height: 50,
                           class: "rounded",
-                          style: "object-fit: contain;" %>
+                          style: "object-fit: contain; align-items-center" %>
           <% end %>
         </li>
         <li class="nav-item me-3">
@@ -136,18 +135,14 @@
 
 <!--  <div class="container-fluid ">-->
   <% unless controller_name == 'sessions' && action_name == 'new' %>
-    <footer class="bg-info text-white mt-auto py-3 small border-top">
-    <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
-      <div class="d-flex align-items-center gap-2">
-        <i class="bi bi-mortarboard-fill fs-5"></i>
-        <span>Управление цифровых образовательных технологий</span>
+    <footer class="bg-info text-white mt-auto py-3 border-top">
+      <div class="container d-flex justify-content-center align-items-center">
+        <%= image_tag 'ucot.png',
+                      alt: 'Логотип',
+                      class: "img-fluid",
+                      style: "max-height: 50px;" %>
       </div>
-      <div class="d-flex align-items-center gap-2">
-        <i class="bi bi-telephone-fill fs-6"></i>
-        <span>+7 (888) 123-45-67</span>
-      </div>
-    </div>
-  </footer>
+    </footer>
   <% end %>
 <!--  </div>-->
 

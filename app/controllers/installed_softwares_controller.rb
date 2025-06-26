@@ -56,9 +56,8 @@ class InstalledSoftwaresController < ApplicationController
 
   # POST /installed_softwares or /installed_softwares.json
   def create
-    if params[:is_perpetual] == '1'
-      params[:installed_software][:finish_date] = nil
-    end
+    @installed_software.perpetual_flag = params[:is_perpetual] == '1'
+    @installed_software.finish_date = nil if @installed_software.perpetual_flag
 
     @installed_software = InstalledSoftware.new(installed_software_params)
     authorize @installed_software
@@ -77,9 +76,8 @@ class InstalledSoftwaresController < ApplicationController
 
   # PATCH/PUT /installed_softwares/1 or /installed_softwares/1.json
   def update
-    if params[:is_perpetual] == '1'
-      params[:installed_software][:finish_date] = nil
-    end
+    @installed_software.perpetual_flag = params[:is_perpetual] == '1'
+    @installed_software.finish_date = nil if @installed_software.perpetual_flag
 
     authorize @installed_software
     respond_to do |format|

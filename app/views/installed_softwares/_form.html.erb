@@ -12,7 +12,7 @@
             </div>
             <div class="col-md-3">
               <%= form.label :note, 'Отметка', class: 'form-label small' %>
-              <%= form.text_field :note, class: 'form-control', maxlength: 8, placeholder: '8 симв.' %>
+              <%= form.text_field :note, class: 'form-control', placeholder: '8 симв.' %>
             </div>
             <div class="row align-items-center g-3">
               <div class="col-md-4">
@@ -39,7 +39,7 @@
           <div class="row gx-2 gy-3">
             <div class="col-md-12">
               <%= form.label :start_date, 'Начало', class: 'form-label' %>
-              <%= form.date_field :start_date, class: 'form-control' %>
+              <%= form.date_field :start_date, class: 'form-control', max: "2999-12-31"  %>
             </div>
 
             <div class="form-check form-switch mb-2">
@@ -49,7 +49,7 @@
 
             <div class="col-md-12">
               <%= form.label :finish_date, 'Окончание', class: 'form-label' %>
-              <%= form.date_field :finish_date, class: 'form-control', id: 'finish_date_field' %>
+              <%= form.date_field :finish_date, class: 'form-control', id: 'finish_date_field', max: "2999-12-31"  %>
             </div>
           </div>
         </div>
