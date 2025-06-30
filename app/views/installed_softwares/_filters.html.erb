@@ -80,7 +80,11 @@
               type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false">
-        <%= (params.dig(:q, :comp_classes_aud_number_in)&.join(', ') || 'Фильтр по аудиториям') %>
+        <%= if params.dig(:q, :comp_classes_aud_number_in).present?
+              "✓ Применён"
+            else
+              "Фильтр по аудиториям"
+            end %>
       </button>
       <div class="dropdown-menu p-3 shadow w-100" style="max-height: 40vh; overflow-y: auto;" id="aud-dropdown">
         <input type="text" class="form-control form-control-sm mb-2 auto-search" placeholder="Поиск..." id="aud-filter-search">

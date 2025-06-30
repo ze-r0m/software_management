@@ -1,2 +1,11 @@
 document.getElementById("comp_classes").innerHTML = "<%= j(render partial: 'table', locals: { comp_classes: @comp_classes }) %>";
 document.getElementById("pagination-wrapper").innerHTML = "<%= j(paginate @comp_classes, params: request.query_parameters, remote: true) %>";
+document.getElementById("filtered-link-container").innerHTML = `<%= j(
+  link_to(installed_softwares_path(q: { comp_classes_aud_number_in: @comp_classes_aud_number_in }),
+    class: 'btn btn-warning btn-sm',
+    title: 'ПО для фильтрованных аудиторий',
+    data: { bs_toggle: "tooltip" }) do
+      raw('<i class="bi bi-hdd-fill text-white"></i>')
+    end
+) %>`;
+

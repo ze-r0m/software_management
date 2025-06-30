@@ -7,13 +7,12 @@ class CompClassesController < ApplicationController
   # GET /comp_classes or /comp_classes.json
   def index
     @q = policy_scope(CompClass).includes(:cafedra).ransack(params[:q])
-    @comp_classes = @q.result
-                      .page(params[:page])
-                      .per(per_page)
+    all_filtered = @q.result(distinct: true)
 
+    @comp_classes = all_filtered.page(params[:page]).per(per_page)
     @current_per_page = per_page
 
-    @all_filtered_comp_class_auds = @q.result(distinct: true).pluck(:aud_number)
+    @comp_classes_aud_number_in = all_filtered.pluck(:aud_number).uniq
     @all_aud_numbers = CompClass.order(:aud_number).distinct.pluck(:aud_number)
     @cafedras = Cafedra.order(:name)
 
@@ -93,7 +92,8 @@ class CompClassesController < ApplicationController
       params.require(:comp_class).permit(
         :aud_number, :count_seat, :count_comp_seat,
         :count_comp, :spec_purpose, :projector, :panel,
-        :ch_board, :add_note, :cafedra_id
+        :ch_board, :add_note, :cafedra_id,
+        # comp_classes_aud_number_in: []
       )
     end
 end

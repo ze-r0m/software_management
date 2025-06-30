@@ -118,10 +118,15 @@
   <!-- Кнопка сброса -->
   <th class="text-end text-nowrap">
     <div class="d-inline-flex gap-2 flex-nowrap align-content-end justify-content-end">
-      <%= link_to installed_softwares_path(q: { comp_classes_aud_number_in: @all_filtered_comp_class_auds }),
-                  class: 'btn btn-warning btn-sm ',
-                  title: 'ПО для фильтрованных аудиторий',
-                  data: { bs_toggle: "tooltip" } do %> <i class="bi bi-hdd-fill text-white"></i> <% end %>
+      <div id="filtered-link-container">
+        <%= link_to installed_softwares_path(q: { comp_classes_aud_number_in: @comp_classes_aud_number_in }),
+                    class: 'btn btn-warning btn-sm ',
+                    title: 'ПО для фильтрованных аудиторий',
+                    data: { bs_toggle: "tooltip" } do %>
+          <i class="bi bi-hdd-fill text-white"></i> <% end %>
+
+
+      </div>
       <%= button_tag 'Очистить', type: 'button', class: 'btn btn-secondary btn-sm', id: 'reset-filters' %>
     </div>
   </th>
