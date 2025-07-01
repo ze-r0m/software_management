@@ -135,6 +135,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Кнопка сброса фильтров
         document.getElementById("reset-filters")?.addEventListener("click", function () {
             const form = document.getElementById("search-form");
             if (!form) return;
@@ -157,6 +158,7 @@
             Rails.fire(form, 'submit');
         });
 
+        // Поиск и автосабмит
         function setupDropdownSearch(inputId, dropdownSelector, checkboxClass) {
             const searchInput = document.getElementById(inputId);
             if (searchInput) {
@@ -180,7 +182,7 @@
         setupDropdownSearch("aud-filter-search", '#aud-dropdown .form-check', ".aud-checkbox");
         setupDropdownSearch("cafedra-filter-search", '.dropdown-menu .form-check', ".cafedras-checkbox");
 
-// Авто-поиск при вводе текста
+        // Авто-поиск при вводе текста
         document.querySelectorAll(".auto-search").forEach(input => {
             input.addEventListener("input", function() {
                 clearTimeout(this.dataset.timer);
@@ -190,10 +192,30 @@
             });
         });
 
+        // Автосабмит при изменении select
         document.querySelectorAll('.auto-submit').forEach(el => {
             el.addEventListener('change', () => {
                 const form = document.getElementById('search-form');
                 if (form) Rails.fire(form, 'submit');
+            });
+        });
+
+        // Не закрывать dropdown при клике по внутренним элементам
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        });
+
+        // Закрывать dropdown при уходе мыши из выпадающего списка
+        document.querySelectorAll('.dropdown').forEach(dropdownEl => {
+            dropdownEl.addEventListener('mouseleave', () => {
+                const toggleBtn = dropdownEl.querySelector('button.dropdown-toggle');
+                if (!toggleBtn) return;
+                const dropdownInstance = bootstrap.Dropdown.getInstance(toggleBtn);
+                if (dropdownInstance) {
+                    dropdownInstance.hide();
+                }
             });
         });
     });

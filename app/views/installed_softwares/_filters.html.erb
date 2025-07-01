@@ -23,9 +23,9 @@
                        max: 999%>
   </th>
 
-  <!--фильтр по периоду действия-->
+  <!-- Фильтр по периоду действия -->
   <th>
-    <div class="dropdown w-100">
+    <div class="dropdown w-100" data-bs-auto-close="outside">
       <button class="form-control form-control-sm dropdown-toggle text-start"
               type="button"
               data-bs-toggle="dropdown"
@@ -56,11 +56,13 @@
           } %>
 
           <% date_filters.each do |value, label| %>
+            <% input_id = "filter_#{value.presence || 'all'}" %>
             <div class="form-check">
-              <%= f.radio_button :finish_date, value, id: "filter_#{value}", class: "form-check-input auto-submit" %>
-              <%= f.label "filter_#{value}", label, class: "form-check-label" %>
+              <%= f.radio_button :finish_date, value, id: input_id, class: "form-check-input auto-submit" %>
+              <%= label_tag input_id, label, class: "form-check-label" %>
             </div>
           <% end %>
+
         </div>
       </div>
     </div>
@@ -73,9 +75,9 @@
                        maxlength: 255 %>
   </th>
 
-  <!--Фильтр по аудиториям-->
+  <!-- Фильтр по аудиториям -->
   <th class="start">
-    <div class="dropdown w-100">
+    <div class="dropdown w-100" data-bs-auto-close="outside">
       <button class="form-control form-control-sm dropdown-toggle text-start"
               type="button"
               data-bs-toggle="dropdown"
@@ -95,9 +97,7 @@
                  value="true"
                  id="aud_none"
                  <%= params.dig(:q, :comp_classes_id_null) == "true" ? 'checked' : '' %>>
-          <label class="form-check-label" for="aud_none">
-            Не установлено
-          </label>
+          <label class="form-check-label" for="aud_none">Не установлено</label>
         </div>
 
         <% CompClass.order(:aud_number).distinct.pluck(:aud_number).each do |aud| %>
@@ -107,10 +107,8 @@
                    name="q[comp_classes_aud_number_in][]"
                    value="<%= aud %>"
                    id="aud_<%= aud %>"
-            <%= Array(params.dig(:q, :comp_classes_aud_number_in)).include?(aud) ? 'checked' : '' %>
-            <label class="form-check-label" for="aud_<%= aud %>">
-              <%= aud %>
-            </label>
+                   <%= Array(params.dig(:q, :comp_classes_aud_number_in)).include?(aud) ? 'checked' : '' %>>
+            <label class="form-check-label" for="aud_<%= aud %>"><%= aud %></label>
           </div>
         <% end %>
       </div>
@@ -118,19 +116,12 @@
   </th>
 
   <th>
-    <%= f.number_field :pc_count_sum_eq,
-                       class: "form-control form-control-sm auto-search",
-                       inputmode: "numeric",
-                       min: 0,
-                       step: 1,
-                       max: 999,
-                       placeholder: "∑"%>
+    <%= f.number_field :pc_count_sum_eq, class: "form-control form-control-sm auto-search", inputmode: "numeric", min: 0, step: 1, max: 999, placeholder: "∑" %>
   </th>
 
   <th class="text-end">
     <div class="d-flex gap-2 align-content-end justify-content-end">
       <%= button_tag 'Очистить', type: 'button', class: 'btn btn-secondary btn-sm', id: 'reset-filters' %>
-
     </div>
   </th>
 </tr>
@@ -156,9 +147,9 @@
 
         const audSearch = document.getElementById("aud-filter-search");
         if (audSearch) {
-            audSearch.addEventListener("input", function() {
+            audSearch.addEventListener("input", function () {
                 const term = this.value.toLowerCase();
-                document.querySelectorAll('.dropdown-menu .form-check').forEach(item => {
+                document.querySelectorAll('#aud-dropdown .form-check').forEach(item => {
                     const text = item.textContent.toLowerCase();
                     item.style.display = text.includes(term) ? 'block' : 'none';
                 });
@@ -167,30 +158,6 @@
 
         document.querySelectorAll(".aud-checkbox").forEach(checkbox => {
             checkbox.addEventListener("change", () => {
-                document.getElementById("search-form").requestSubmit();
-            });
-        });
-
-        document.querySelectorAll("a[data-sort]").forEach(link => {
-            link.addEventListener("click", function (e) {
-                e.preventDefault();
-
-                const sortField = this.dataset.sort;
-                const sortInput = document.getElementById("sort-order");
-                let current = sortInput.value;
-
-                // Логика циклической сортировки: none → asc → desc → none
-                const asc = `${sortField} asc`;
-                const desc = `${sortField} desc`;
-
-                if (current === asc) {
-                    sortInput.value = desc;
-                } else if (current === desc) {
-                    sortInput.value = "";
-                } else {
-                    sortInput.value = asc;
-                }
-
                 document.getElementById("search-form").requestSubmit();
             });
         });
@@ -209,14 +176,17 @@
                 input.checked = false;
             });
 
-            // Удаление сортировки (q[s])
+            // Явно выбрать "Все" для finish_date
+            const finishRadio = form.querySelector("input[name='q[finish_date]'][value='']");
+            if (finishRadio) finishRadio.checked = true;
+
             const sortInput = form.querySelector("input[name='q[s]']");
             if (sortInput) sortInput.value = "";
 
-            // Отправка формы
             form.requestSubmit();
         });
 
+        // Обновление иконок сортировки
         function updateSortIcons() {
             const sortValue = document.getElementById("sort-order")?.value;
             document.querySelectorAll("i[data-sort-field]").forEach(icon => {
@@ -231,12 +201,11 @@
             });
         }
 
-        updateSortIcons(); // при загрузке
+        updateSortIcons();
 
         document.querySelectorAll("a[data-sort]").forEach(link => {
             link.addEventListener("click", function (e) {
                 e.preventDefault();
-
                 const sortField = this.dataset.sort;
                 const sortInput = document.getElementById("sort-order");
                 let current = sortInput.value;
@@ -253,10 +222,25 @@
                 }
 
                 updateSortIcons();
-
                 document.getElementById("search-form").requestSubmit();
             });
         });
 
+        // Не закрывать dropdown при клике по содержимому
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        });
+
+        // Закрытие dropdown при покидании мыши
+        document.querySelectorAll('.dropdown').forEach(dropdownEl => {
+            dropdownEl.addEventListener('mouseleave', () => {
+                const toggleBtn = dropdownEl.querySelector('button.dropdown-toggle');
+                if (!toggleBtn) return;
+                const dropdownInstance = bootstrap.Dropdown.getInstance(toggleBtn);
+                if (dropdownInstance) dropdownInstance.hide();
+            });
+        });
     });
 </script>
