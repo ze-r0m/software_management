@@ -1,10 +1,26 @@
 <thead class="table-light">
 <tr>
   <th>
-    <%= f.search_field :name_cont,
-                       placeholder: "Поиск",
-                       class: "form-control form-control-sm auto-search",
-                       maxlength: 255 %>
+
+    <div class="d-flex align-items-center border-0">
+      <%= f.search_field :name_cont,
+                         placeholder: "Поиск по названию",
+                         class: "form-control form-control-sm auto-search",
+                         maxlength: 255 %>
+
+      <div class="d-inline-block ms-2">
+        <%= f.check_box :is_server_true,
+                        class: "btn-check auto-submit",
+                        id: "server-switch",
+                        checked: f.object.is_server_true %>
+
+        <%= f.label :is_server_true,
+                    "Серверное",
+                    for: "server-switch",
+                    class: "badge #{f.object.is_server_true ? 'bg-info text-white' : 'bg-info-subtle text-dark'}",
+                    style: "user-select: none; cursor: pointer; text-transform: none;" %>
+      </div>
+    </div>
   </th>
 
   <th>
@@ -129,6 +145,21 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        const checkbox = document.getElementById("server-switch");
+        const label = document.querySelector("label[for='server-switch']");
+
+        if (checkbox && label) {
+            checkbox.addEventListener("change", function () {
+                if (checkbox.checked) {
+                    label.classList.remove("bg-info-subtle", "text-dark");
+                    label.classList.add("bg-info", "text-white");
+                } else {
+                    label.classList.remove("bg-info", "text-white");
+                    label.classList.add("bg-info-subtle", "text-dark");
+                }
+            });
+        }
+
         document.querySelectorAll(".auto-search").forEach((input) => {
             input.addEventListener("input", function () {
                 clearTimeout(this.dataset.timer);

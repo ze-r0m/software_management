@@ -22,15 +22,25 @@
 <!--        <div class="table-responsive">-->
           <table class="table table-hover mb-0">
             <thead class="table-dark">
+
+            <tr>
+              <th colspan="8" class="text-end p-2 border-0">
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="toggle-filters">
+                  <i class="bi bi-funnel"></i> Фильтры
+                </button>
+              </th>
+            </tr>
+
             <tr class="text-center">
 <!--              <th><%#= sort_link(@q, :name, "Название ПО", {}, { class: "text-light" }) %></th>-->
 <!--              <th><%#= sort_link(@q, :version, "Версия", {}, { class: "text-light" }) %></th>-->
-              <th>
+              <th style="min-width: 300px;">
                 <%= link_to "#", class: "text-light sort-link d-inline-flex align-items-center", data: { sort: "name" } do %>
                   Название ПО
                   <i class="ms-1 bi" data-sort-field="name"></i>
                 <% end %>
               </th>
+
               <th>
                 <%= link_to "#", class: "text-light sort-link d-inline-flex align-items-center", data: { sort: "version" } do %>
                   Версия
@@ -39,18 +49,21 @@
               </th>
               <th style="min-width: 80px;">Кол-во</th>
               <th>Срок лицензии</th>
-              <th style="min-width: 100px;">Держатель ключа</th>
-              <th style="min-width: 300px;">Аудитории</th>
+              <th >Держатель ключа</th>
+              <th >Аудитории</th>
               <th class="text-center" style="min-width: 80px;">&sum;&nbsp;ПК</th>
               <th class="text-end">Действия</th>
             </tr>
 
             </thead>
 
-            <%= render partial: "filters", locals: {f: f} %>
+<!--            TODO: кнопку и скрытие фильтров-->
+            <tbody id="filters-row" style="display: none;" class="bg-body-tertiary">
+              <%= render partial: "filters", locals: {f: f} %>
+            </tbody>
 
             <tbody id="softwares">
-            <%= render partial: "table", locals: { installed_software: @installed_software } %>
+              <%= render partial: "table", locals: { installed_software: @installed_software } %>
             </tbody>
           </table>
 <!--        </div>-->

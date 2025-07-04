@@ -27,9 +27,9 @@
 
     <td class="text-center">
       <% if software.start_date && software.finish_date %>
-        <%= software.start_date.strftime('%d.%m.%Y') %>&nbsp;—&nbsp;<%= software.finish_date.strftime('%d.%m.%Y') %>
+        <%= software.start_date.strftime('%d.%m.%Y') %><br>—<br><%= software.finish_date.strftime('%d.%m.%Y') %>
       <% elsif software.start_date && software.finish_date.nil? %>
-        <%= software.start_date.strftime('%d.%m.%Y') %>&nbsp;—&nbsp;<em>бессрочно</em>
+        <%= software.start_date.strftime('%d.%m.%Y') %><br>—<br><em>бессрочно</em>
       <% else %>
         <em>Без срока</em>
       <% end %>
