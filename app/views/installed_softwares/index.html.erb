@@ -23,13 +23,14 @@
           <table class="table table-hover mb-0">
             <thead class="table-dark">
 
-            <tr>
-              <th colspan="8" class="text-end p-2 border-0">
-                <button type="button" class="btn btn-sm btn-outline-secondary" id="toggle-filters">
-                  <i class="bi bi-funnel"></i> Фильтры
-                </button>
-              </th>
-            </tr>
+<!--            //TODO: кнопка скрытия и показа фильтров-->
+<!--            <tr>-->
+<!--              <th colspan="8" class="text-end p-2 border-0">-->
+<!--                <button type="button" class="btn btn-sm btn-outline-secondary" id="toggle-filters">-->
+<!--                  <i class="bi bi-funnel"></i> Фильтры-->
+<!--                </button>-->
+<!--              </th>-->
+<!--            </tr>-->
 
             <tr class="text-center">
 <!--              <th><%#= sort_link(@q, :name, "Название ПО", {}, { class: "text-light" }) %></th>-->
@@ -57,10 +58,12 @@
 
             </thead>
 
-<!--            TODO: кнопку и скрытие фильтров-->
-            <tbody id="filters-row" style="display: none;" class="bg-body-tertiary">
-              <%= render partial: "filters", locals: {f: f} %>
-            </tbody>
+<!--            //TODO: кнопка скрытия и показа фильтров-->
+<!--            <tbody id="filters-row" class="bg-body-tertiary" style="display: none;">-->
+            <%= render partial: "filters", locals: { f: f } %>
+<!--            </tbody>-->
+
+
 
             <tbody id="softwares">
               <%= render partial: "table", locals: { installed_software: @installed_software } %>
@@ -90,3 +93,46 @@
   </div>
 </div>
 <% end %>
+
+<!--//TODO: кнопка скрытия и показа фильтров-->
+<!--<script>-->
+<!--    // filters_toggle.js-->
+<!--    document.addEventListener('DOMContentLoaded', initFilters);-->
+<!--    document.addEventListener('ajax:complete', initFilters);-->
+
+<!--    function initFilters() {-->
+<!--        const toggleButton = document.getElementById('toggle-filters');-->
+<!--        const filtersRow = document.getElementById('filters-row');-->
+
+<!--        if (!toggleButton || !filtersRow) return;-->
+
+<!--        // Восстановление состояния из localStorage-->
+<!--        const isVisible = localStorage.getItem('filtersVisible') === 'true';-->
+<!--        updateFiltersVisibility(isVisible);-->
+
+<!--        // Делегирование события клика-->
+<!--        document.body.addEventListener('click', function(e) {-->
+<!--            if (e.target.closest('#toggle-filters')) {-->
+<!--                e.preventDefault();-->
+<!--                const newState = filtersRow.style.display === 'none';-->
+<!--                updateFiltersVisibility(newState);-->
+<!--                localStorage.setItem('filtersVisible', newState);-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+
+<!--    function updateFiltersVisibility(isVisible) {-->
+<!--        const filtersRow = document.getElementById('filters-row');-->
+<!--        const toggleButton = document.getElementById('toggle-filters');-->
+
+<!--        if (isVisible) {-->
+<!--            filtersRow.style.display = 'table-row-group';-->
+<!--            toggleButton.innerHTML = '<i class="bi bi-funnel-fill"></i> Скрыть фильтры';-->
+<!--        } else {-->
+<!--            filtersRow.style.display = 'none';-->
+<!--            toggleButton.innerHTML = '<i class="bi bi-funnel"></i> Фильтры';-->
+<!--        }-->
+<!--    }-->
+<!--    window.updateFiltersVisibility = updateFiltersVisibility;-->
+
+<!--</script>-->
