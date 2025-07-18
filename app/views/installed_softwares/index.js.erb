@@ -1,4 +1,3 @@
-document.getElementById("filters-row").innerHTML = "<%= j render partial: 'installed_softwares/filters', locals: { f: @q } %>";
 document.getElementById("softwares").innerHTML = "<%= j render partial: 'installed_softwares/table', locals: { installed_software: @installed_software } %>";
 document.getElementById("pagination-wrapper").innerHTML = "<%= j(paginate @installed_software, params: request.query_parameters, remote: true) %>";
 
