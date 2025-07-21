@@ -1,6 +1,6 @@
 class CompClassesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_comp_class, only: %i[ show edit update destroy ]
+  before_action :set_comp_class, only: %i[ show edit update destroy soft_delete restore ]
   after_action  :verify_policy_scoped, only: :index
   after_action  :verify_authorized,     except: :index
 
@@ -13,7 +13,7 @@ class CompClassesController < ApplicationController
     @current_per_page = per_page
 
     @comp_classes_aud_number_in = all_filtered.pluck(:aud_number).uniq
-    @all_aud_numbers = CompClass.order(:aud_number).distinct.pluck(:aud_number)
+    @all_aud_numbers = CompClass.not_deleted.order(:aud_number).distinct.pluck(:aud_number)
     @cafedras = Cafedra.order(:name)
 
     respond_to do |format|
@@ -25,6 +25,9 @@ class CompClassesController < ApplicationController
   # GET /comp_classes/1 or /comp_classes/1.json
   def show
     authorize @comp_class
+    if @comp_class.deleted_at.present? && !current_user.role.name == 'moderator'
+      redirect_to comp_classes_path, alert: 'Аудитория недоступна.'
+    end
   end
 
   # GET /comp_classes/new
@@ -80,6 +83,28 @@ class CompClassesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def soft_delete
+    authorize @comp_class, :soft_delete?
+
+    @comp_class.soft_delete!
+
+    respond_to do |format|
+      format.js   # soft_delete.js.erb
+      format.html { redirect_back fallback_location: comp_classes_path, alert: 'Аудитория помечена на удаление.' }
+    end
+  end
+
+  def restore
+    authorize @comp_class, :restore?
+    @comp_class.update(deleted_at: nil)
+
+    respond_to do |format|
+      format.js   # render restore.js.erb
+      format.html { redirect_back fallback_location: comp_classes_path, notice: 'Аудитория восстановлена.' }
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

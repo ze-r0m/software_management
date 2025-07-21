@@ -3,7 +3,12 @@
   <div class="card shadow rounded-4 overflow-hidden">
     <div class="card-header bg-light px-4 py-3 d-flex justify-content-between align-items-center">
       <h3 class="mb-0">
-        <i class="bi bi-door-closed me-2"></i>Аудитория <%= @comp_class.aud_number %>
+        <i class="bi bi-door-closed me-2"></i>
+        <% if @comp_class.deleted_at.present? %>
+          <s>Аудитория <%= @comp_class.aud_number %></s>
+        <% else %>
+          Аудитория <%= @comp_class.aud_number %>
+        <% end %>
       </h3>
       <%= link_to comp_classes_path, class: 'btn btn-secondary' do %>
         <i class="bi bi-arrow-left"></i> Назад
@@ -68,10 +73,25 @@
       <%= link_to edit_comp_class_path(@comp_class), class: 'btn btn-outline-primary' do %>
         <i class="bi bi-pencil"></i> Редактировать
       <% end %>
-      <%= link_to @comp_class, method: :delete,
-                  data: { confirm: 'Вы уверены?' },
-                  class: 'btn btn-outline-danger' do %>
-        <i class="bi bi-trash"></i> Удалить
+      <%= link_to soft_delete_comp_class_path(@comp_class), method: :patch,
+                  data: { confirm: 'Пометить на удаление?', bs_toggle: "tooltip" },
+                  class: 'btn btn-outline-danger', title: 'Пометить на удаление' do%>
+        <i class="bi bi-trash"></i> Пометить на удаление
+      <%end %>
+
+
+      <% if current_user.role.name == 'admin'  %>
+        <%= link_to @comp_class, method: :delete,
+                    data: { confirm: 'Вы уверены?' },
+                    class: 'btn btn-outline-danger' do %>
+          <i class="bi bi-x-lg"></i> Удалить
+        <% end %>
+        <%= link_to restore_comp_class_path(@comp_class),
+                    method: :patch,
+                    class: "btn btn-outline-success #{'disabled' if @comp_class.deleted_at.nil?}",
+                    title: 'Восстановить' do %>
+          <i class="bi bi-arrow-clockwise"></i> Восстановить
+        <% end %>
       <% end %>
     </div>
   </div>

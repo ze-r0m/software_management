@@ -1,6 +1,5 @@
 <% @comp_classes.each do |comp_class| %>
-
-  <tr>
+  <tr class="<%= 'text-decoration-line-through text-muted' if comp_class.deleted_at.present? && current_user.role.name == 'admin' %>">
     <td class="text-start"><b><%= comp_class.aud_number %></b></td>
     <td><%= comp_class.cafedra.name %></td>
     <td><%= comp_class.count_seat %></td>
@@ -24,9 +23,10 @@
       <div class="d-inline-flex gap-2">
         <%= link_to installed_softwares_path(q: { comp_classes_aud_number_in: [comp_class.aud_number] }),
                     class: 'text-decoration-none text-warning', title: 'ПО этой аудитории', data: { bs_toggle: "tooltip" } do %>
-          <i class="bi bi-hdd "></i>
+          <i class="bi bi-hdd"></i>
+        <% end %>
 
-          <%= link_to comp_class, class: 'text-decoration-none text-success', title: 'Просмотр', data: { bs_toggle: "tooltip" } do %>
+        <%= link_to comp_class, class: 'text-decoration-none text-success', title: 'Просмотр', data: { bs_toggle: "tooltip" } do %>
           <i class="bi bi-eye"></i>
         <% end %>
 
@@ -34,15 +34,27 @@
           <i class="bi bi-pencil"></i>
         <% end %>
 
-        <%= link_to comp_class_path(comp_class), method: :delete,
-                    data: { confirm: 'Вы уверены?', bs_toggle: "tooltip" },
-                    class: 'text-decoration-none text-danger', title: 'Удалить' do %>
+        <%= link_to soft_delete_comp_class_path(comp_class), method: :patch,
+                    data: { confirm: 'Пометить на удаление?', bs_toggle: "tooltip" },
+                    class: 'text-decoration-none text-danger', title: 'Пометить на удаление' do %>
           <i class="bi bi-trash"></i>
         <% end %>
 
+        <% if current_user.role.name == 'admin' %>
+          <%= link_to restore_comp_class_path(comp_class),
+                      method: :patch,
+                      class: "text-decoration-none text-success #{'disabled' if comp_class.deleted_at.nil?}",
+                      title: 'Восстановить' do %>
+            <i class="bi bi-arrow-clockwise"></i>
+          <% end %>
+
+          <%= link_to comp_class_path(comp_class), method: :delete,
+                      data: { confirm: 'Вы уверены?', bs_toggle: "tooltip" },
+                      class: 'text-decoration-none text-danger', title: 'Удалить' do %>
+            <i class="bi bi-x-lg"></i>
+          <% end %>
         <% end %>
       </div>
     </td>
-
   </tr>
 <% end %>

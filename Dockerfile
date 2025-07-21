@@ -26,4 +26,5 @@ RUN bundle install
 COPY . .
 
 # Удалим PID перед запуском
-CMD ["bash", "-c", "rm -f tmp/pids/server.pid && bin/dev"]
+CMD ["bash", "-c", "rm -f tmp/pids/server.pid"]
+CMD ["bash", "-c", "rm -f bin/dev"]

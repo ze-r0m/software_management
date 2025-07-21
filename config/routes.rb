@@ -15,7 +15,13 @@ Rails.application.routes.draw do
     resources :class_softwares
     resources :faculties
     resources :cafedras
-    resources :comp_classes
+    resources :comp_classes do
+      member do
+        patch :soft_delete
+        patch :restore
+      end
+    end
+
     resources :installed_softwares
     resources :request_softs
   end
