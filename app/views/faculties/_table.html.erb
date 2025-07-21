@@ -1,5 +1,5 @@
 <% @faculties.each do |faculty| %>
-  <tr>
+  <tr class="<%= 'text-decoration-line-through text-muted' if faculty.deleted_at.present? && current_user.role.name == 'admin' %>">
     <td><%= faculty.name %></td>
     <td><%= faculty.add_note %></td>
     <td class="text-end">
@@ -12,13 +12,28 @@
           <i class="bi bi-pencil"></i>
         <% end %>
 
-        <%= link_to faculty_path(faculty), method: :delete,
-                    data: { confirm: 'Вы уверены?', bs_toggle: "tooltip" },
-                    class: 'text-decoration-none text-danger', title: 'Удалить' do %>
+        <%= link_to soft_delete_faculty_path(faculty),
+                    method: :patch,
+                    data: { confirm: 'Пометить на удаление?', bs_toggle: "tooltip" },
+                    class: 'text-decoration-none text-danger', title: 'Пометить на удаление' do %>
           <i class="bi bi-trash"></i>
+        <% end %>
+
+        <% if current_user.role.name == 'admin'%>
+          <%= link_to restore_faculty_path(faculty),
+                      method: :patch,
+                      class: "text-decoration-none text-success #{'disabled' if faculty.deleted_at.nil?}",
+                      title: 'Восстановить' do %>
+            <i class="bi bi-arrow-clockwise"></i>
+          <% end %>
+
+          <%= link_to faculty_path(faculty), method: :delete,
+                      data: { confirm: 'Вы уверены?', bs_toggle: "tooltip" },
+                      class: 'text-decoration-none text-danger', title: 'Удалить' do %>
+            <i class="bi bi-x-lg"></i>
+          <% end %>
         <% end %>
       </div>
     </td>
-
   </tr>
 <% end %>

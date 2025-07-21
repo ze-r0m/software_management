@@ -26,7 +26,7 @@ class CompClassesController < ApplicationController
   def show
     authorize @comp_class
     if @comp_class.deleted_at.present? && !current_user.role.name == 'moderator'
-      redirect_to comp_classes_path, alert: 'Аудитория недоступна.'
+      redirect_to comp_classes_path, alert: 'Аудитория недоступна'
     end
   end
 
@@ -91,7 +91,7 @@ class CompClassesController < ApplicationController
 
     respond_to do |format|
       format.js   # soft_delete.js.erb
-      format.html { redirect_back fallback_location: comp_classes_path, alert: 'Аудитория помечена на удаление.' }
+      format.html { redirect_back fallback_location: comp_classes_path, alert: 'Аудитория помечена на удаление' }
     end
   end
 
@@ -101,7 +101,7 @@ class CompClassesController < ApplicationController
 
     respond_to do |format|
       format.js   # render restore.js.erb
-      format.html { redirect_back fallback_location: comp_classes_path, notice: 'Аудитория восстановлена.' }
+      format.html { redirect_back fallback_location: comp_classes_path, notice: 'Аудитория восстановлена' }
     end
   end
 

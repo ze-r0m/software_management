@@ -1,6 +1,6 @@
 class FacultiesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_faculty, only: %i[ show edit update destroy ]
+  before_action :set_faculty, only: %i[ show edit update destroy soft_delete restore ]
   after_action  :verify_policy_scoped, only: :index
   after_action  :verify_authorized,     except: :index
 
@@ -35,6 +35,9 @@ class FacultiesController < ApplicationController
   # GET /faculties/1 or /faculties/1.json
   def show
     authorize @faculty
+    if @faculty.deleted_at.present? && !current_user.role.name == 'moderator'
+      redirect_to faculties_path, alert: 'Факультет недоступен'
+    end
   end
 
   # GET /faculties/new
@@ -88,6 +91,27 @@ class FacultiesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to faculties_path, status: :see_other, notice: t('flash.actions.destroy.notice', model: Faculty.model_name.human) }
       format.json { head :no_content }
+    end
+  end
+
+  def soft_delete
+    authorize @faculty, :soft_delete?
+
+    @faculty.soft_delete!
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_back fallback_location: faculties_path, alert: 'Факультет помечен на удаление' }
+    end
+  end
+
+  def restore
+    authorize @faculty, :restore?
+    @faculty.update(deleted_at: nil)
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_back fallback_location: faculties_path, notice: 'Факультет восстановлен' }
     end
   end
 

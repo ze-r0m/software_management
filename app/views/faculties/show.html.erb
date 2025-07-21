@@ -3,11 +3,12 @@
   <div class="card shadow rounded-4 overflow-hidden">
     <div class="card-header bg-light px-4 py-3 d-flex justify-content-between align-items-center">
       <h3 class="mb-0 d-flex align-items-center gap-3 flex-wrap">
-        <i class="bi bi-building text-primary"></i>
-        <span><%= @faculty.name %></span>
-        <%# if @faculty.add_note.present? %>
-<!--          <span class="badge bg-secondary"><%#= @faculty.add_note %></span>-->
-        <%# end %>
+        <i class="bi bi-door-closed me-2"></i>
+        <% if @faculty.deleted_at.present? %>
+          <s><span><%= @faculty.name %></span></s>
+        <% else %>
+          <span><%= @faculty.name %></span>
+        <% end %>
       </h3>
 
       <%= link_to faculties_path, class: 'btn btn-secondary' do %>
@@ -40,11 +41,25 @@
       <%= link_to edit_faculty_path(@faculty), class: 'btn btn-outline-primary' do %>
         <i class="bi bi-pencil"></i> Редактировать
       <% end %>
+      <%= link_to soft_delete_faculty_path(@faculty), method: :patch,
+                  data: { confirm: 'Пометить на удаление?', bs_toggle: "tooltip" },
+                  class: 'btn btn-outline-danger', title: 'Пометить на удаление' do%>
+        <i class="bi bi-trash"></i> Пометить на удаление
+      <%end %>
 
-      <%= link_to 'Удалить', @faculty,
-                  method: :delete,
-                  data: { confirm: 'Вы уверены, что хотите удалить этот факультет?' },
-                  class: 'btn btn-outline-danger' %>
+      <% if current_user.role.name == 'admin'  %>
+        <%= link_to @faculty, method: :delete,
+                    data: { confirm: 'Вы уверены?' },
+                    class: 'btn btn-outline-danger' do %>
+          <i class="bi bi-x-lg"></i> Удалить
+        <% end %>
+        <%= link_to restore_faculty_path(@faculty),
+                    method: :patch,
+                    class: "btn btn-outline-success #{'disabled' if @faculty.deleted_at.nil?}",
+                    title: 'Восстановить' do %>
+          <i class="bi bi-arrow-clockwise"></i> Восстановить
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>
