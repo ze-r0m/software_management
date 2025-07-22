@@ -12,8 +12,8 @@ class FacultyPolicy < ApplicationPolicy
 
   def show?    = user.role.name.in?(%w[admin moderator])
   def index?   = show?
-  def create?  = user.role.name == 'admin'
-  def update?  = user.role.name == 'admin'
+  def create?  = user.role.name =  user.role.name.in?(%w[admin moderator])
+  def update?  = user.role.name =  user.role.name.in?(%w[admin moderator])
   def destroy? = user.role.name == 'admin'
   def soft_delete? =  user.role.name.in?(%w[admin moderator])
   def restore? =  user.role.name == 'admin'
