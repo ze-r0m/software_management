@@ -1,6 +1,6 @@
 class CafedrasController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_cafedra, only: %i[ show edit update destroy ]
+  before_action :set_cafedra, only: %i[ show edit update destroy soft_delete restore]
   after_action  :verify_policy_scoped, only: :index
   after_action  :verify_authorized,     except: :index
 
@@ -31,6 +31,9 @@ class CafedrasController < ApplicationController
   # GET /cafedras/1 or /cafedras/1.json
   def show
     authorize @cafedra
+    if @cafedra.deleted_at.present? && !current_user.role.name == 'moderator'
+      redirect_to cafedra_path_path, alert: 'Кафедра недоступна'
+    end
   end
 
   # GET /cafedras/new
@@ -84,6 +87,27 @@ class CafedrasController < ApplicationController
     respond_to do |format|
       format.html { redirect_to cafedras_path, status: :see_other, notice: t('flash.actions.destroy.notice', model: Cafedra.model_name.human) }
       format.json { head :no_content }
+    end
+  end
+
+  def soft_delete
+    authorize @cafedra, :soft_delete?
+
+    @cafedra.soft_delete!
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_back fallback_location: cafedras_path, alert: 'Кафедра помечена на удаление' }
+    end
+  end
+
+  def restore
+    authorize @cafedra, :restore?
+    @cafedra.update(deleted_at: nil)
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_back fallback_location: cafedras_path, notice: 'Кафедра восстановлена' }
     end
   end
 

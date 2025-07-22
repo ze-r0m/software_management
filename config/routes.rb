@@ -19,7 +19,12 @@ Rails.application.routes.draw do
         patch :restore
       end
     end
-    resources :cafedras
+    resources :cafedras do
+      member do
+        patch :soft_delete
+        patch :restore
+      end
+    end
     resources :comp_classes do
       member do
         patch :soft_delete
