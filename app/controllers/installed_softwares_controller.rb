@@ -1,6 +1,6 @@
 class InstalledSoftwaresController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_installed_software, only: %i[ show edit update destroy ]
+  before_action :set_installed_software, only: %i[ show edit update destroy soft_delete restore ]
   after_action  :verify_policy_scoped, only: :index
   after_action  :verify_authorized,     except: :index
 
@@ -41,6 +41,9 @@ class InstalledSoftwaresController < ApplicationController
   # GET /installed_softwares/1 or /installed_softwares/1.json
   def show
     authorize @installed_software
+    if @installed_software.deleted_at.present? && !current_user.role.name == 'moderator'
+      redirect_to installed_software_path, alert: 'ПО недоступно'
+    end
   end
 
   # GET /installed_softwares/new
@@ -56,10 +59,10 @@ class InstalledSoftwaresController < ApplicationController
 
   # POST /installed_softwares or /installed_softwares.json
   def create
+    @installed_software = InstalledSoftware.new(installed_software_params)
     @installed_software.perpetual_flag = params[:is_perpetual] == '1'
     @installed_software.finish_date = nil if @installed_software.perpetual_flag
 
-    @installed_software = InstalledSoftware.new(installed_software_params)
     authorize @installed_software
 
     respond_to do |format|
@@ -103,10 +106,38 @@ class InstalledSoftwaresController < ApplicationController
     end
   end
 
+  def soft_delete
+    authorize @installed_software, :soft_delete?
+
+    @installed_software.soft_delete!
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_back fallback_location: installed_softwares_path, alert: 'ПО помечено на удаление' }
+    end
+  end
+
+  def restore
+    authorize @installed_software, :restore?
+    @installed_software.update(deleted_at: nil)
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_back fallback_location: installed_softwares_path, notice: 'ПО восстановлено' }
+    end
+  end
+
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+
   private
+
+  def record_not_found
+    redirect_to installed_softwares_path, alert: 'Запись не найдена или была удалена'
+  end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_installed_software
-      @installed_software = InstalledSoftware.find(params.expect(:id))
+      @installed_software = InstalledSoftware.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

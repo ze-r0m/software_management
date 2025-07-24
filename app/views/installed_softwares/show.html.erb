@@ -3,7 +3,11 @@
     <div class="card-header bg-light px-4 py-3 d-flex justify-content-between align-items-center">
       <h3 class="mb-0 d-flex align-items-center gap-3 flex-wrap">
         <i class="bi bi-hdd text-primary"></i>
-        <span><%= @installed_software.name %></span>
+        <% if @installed_software.deleted_at.present? %>
+          <s><span><%= @installed_software.name %></span></s>
+        <% else %>
+          <span><%= @installed_software.name %></span>
+        <% end %>
 
         <% if @installed_software.note.present? %>
           <span class="badge bg-secondary"><%= @installed_software.note %></span>
@@ -133,10 +137,25 @@
       <%= link_to edit_installed_software_path(@installed_software), class: 'btn btn-outline-primary' do %>
         <i class="bi bi-pencil"></i> Редактировать
       <% end %>
-      <%= link_to 'Удалить', @installed_software,
-                  method: :delete,
-                  data: { confirm: 'Вы уверены?' },
-                  class: 'btn btn-outline-danger' %>
+
+      <%= link_to soft_delete_installed_software_path(@installed_software), method: :patch,
+                  data: { confirm: 'Пометить на удаление?', bs_toggle: "tooltip" },
+                  class: 'btn btn-outline-danger', title: 'Пометить на удаление' do%>
+        <i class="bi bi-trash"></i> Пометить на удаление
+      <%end %>
+      <% if current_user.role.name == 'admin'  %>
+        <%= link_to @installed_software, method: :delete,
+                    data: { confirm: 'Вы уверены?' },
+                    class: 'btn btn-outline-danger' do %>
+          <i class="bi bi-x-lg"></i> Удалить
+        <% end %>
+        <%= link_to restore_installed_software_path(@installed_software),
+                    method: :patch,
+                    class: "btn btn-outline-success #{'disabled' if @installed_software.deleted_at.nil?}",
+                    title: 'Восстановить' do %>
+          <i class="bi bi-arrow-clockwise"></i> Восстановить
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>

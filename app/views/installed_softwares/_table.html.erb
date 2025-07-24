@@ -1,15 +1,20 @@
 <% installed_software.each do |software| %>
-  <% row_class =
-       if software.finish_date.present?
-         if software.finish_date < Date.current
-           "table-danger" # Просрочено
-         elsif software.finish_date <= Date.current + 3.months
-           "table-warning" # Истекает в течение 3 месяцев
-         end
-       end
-  %>
+  <% row_class = [] %>
 
-  <tr class="<%= row_class %>">
+  <% if software.finish_date.present? %>
+    <% if software.finish_date < Date.current %>
+      <% row_class << "table-danger" %>
+    <% elsif software.finish_date <= Date.current + 3.months %>
+      <% row_class << "table-warning" %>
+    <% end %>
+  <% end %>
+
+  <% if software.deleted_at.present? && current_user.role.name == 'admin' %>
+    <% row_class << "text-decoration-line-through text-muted" %>
+  <% end %>
+
+  <tr class="<%= row_class.join(' ') %>">
+
     <td>
      <%= software.name %>
       <% if software.note.present? %>
@@ -65,10 +70,26 @@
           <i class="bi bi-pencil"></i>
         <% end %>
 
-        <%= link_to installed_software_path(software), method: :delete,
+        <%= link_to soft_delete_installed_software_path(software),
+                    method: :patch,
+                    data: { confirm: 'Пометить на удаление?', bs_toggle: "tooltip" },
+                    class: 'text-decoration-none text-danger', title: 'Пометить на удаление' do %>
+          <i class="bi bi-trash"></i>
+        <% end %>
+
+        <% if current_user.role.name == 'admin'%>
+          <%= link_to restore_installed_software_path(software),
+                      method: :patch,
+                      class: "text-decoration-none text-success #{'disabled' if software.deleted_at.nil?}",
+                      title: 'Восстановить' do %>
+            <i class="bi bi-arrow-clockwise"></i>
+          <% end %>
+
+          <%= link_to installed_software_path(software), method: :delete,
                     data: { confirm: 'Вы уверены?', bs_toggle: "tooltip" },
                     class: 'text-decoration-none text-danger', title: 'Удалить' do %>
-          <i class="bi bi-trash"></i>
+          <i class="bi bi-x-lg"></i>
+        <% end %>
         <% end %>
       </div>
     </td>

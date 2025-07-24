@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_22_094544) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_22_110433) do
   create_table "cafedras", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "add_note"
@@ -75,6 +75,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_22_094544) do
     t.integer "quantity"
     t.string "usage_basis"
     t.text "purpose"
+    t.datetime "deleted_at"
   end
 
   create_table "request_soft_auds", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

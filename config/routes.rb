@@ -32,7 +32,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :installed_softwares
+    resources :installed_softwares do
+      member do
+        patch :soft_delete
+        patch :restore
+      end
+    end
     resources :request_softs
   end
 
