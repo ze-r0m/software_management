@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: software_management_production
+      MYSQL_USER: software_management
+      MYSQL_PASSWORD: UcotSoup1
+      # SECRET_KEY_BASE тут не нужен в базе, убери (он нужен вебу)
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data_prod:/var/lib/mysql
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    environment:
+      RAILS_ENV: production
+      DB_HOST: db
+      DB_NAME: software_management_production       # СОВПАДАЕТ с MYSQL_DATABASE
+      DB_USERNAME: software_management               # Дополни, чтобы явно было
+      DB_PASSWORD: UcotSoup1                         # СОВПАДАЕТ с MYSQL_PASSWORD
+      SECRET_KEY_BASE: e9287af728670eac3aa592eb2de0c328156d6861aa973fb9e29cafc60eff11ecdf02fb3c31dcb6526a745a6199c0a5a64738aae6c67b2d6d888b8a1c396c9769
+    depends_on:
+      - db
+    ports:
+      - "4000:3000"
+    volumes:
+      - .:/app
+
+volumes:
+  db_data_prod:

@@ -27,7 +27,29 @@
         password: changeme123  
 
 
+* Вход в контейнер
         docker exec -it software_management-web-1 bash
+* Билд продакшена 
+  *     docker compose -f docker-compose.prod.yml build
+
+
+docker compose -f docker-compose.prod.yml -p software_management_prod up -d
+
+docker compose -f docker-compose.prod.yml -p software_management_prod --env-file .env.production -p software_prod up --build
+docker compose -f docker-compose.prod.yml --env-file .env.production -p software_prod exec web rails db:migrate
+
+
+docker compose -f docker-compose.prod.yml -p software_management_prod --env-file .env.production -p software_prod up -d --build
+
+docker compose -f docker-compose.prod.yml --env-file .env.production -p software_prod up -d --build
+docker compose -f docker-compose.prod.yml --env-file .env.production -p software_prod exec web rails db:migrate
+
+docker compose -f docker-compose.prod.yml -p software_management_prod --env-file .env.production -p software_prod exec web rails db:migrate
+docker compose -f docker-compose.prod.yml -p software_management_prod --env-file .env.production -p software_prod exec web rails db:seed
+
+подключение к бд
+docker compose -f docker-compose.prod.yml --env-file .env.production -p software_prod exec db mysql -u root -p
+
 
 ### Выявленые баги и задачи к выполнению
 
