@@ -9,13 +9,13 @@ class Cafedra < ApplicationRecord
             uniqueness: { message: "уже существует" },
             length: { maximum: 255, message: "не может быть длиннее %{count} символов" }
 
-  validates :add_note,
+  validates :description,
             length: { maximum: 255, message: "не может быть длиннее %{count} символов" }
 
 
   # Позволяем искать и сортировать по полю faculty.name
   def self.ransackable_attributes(auth_object = nil)
-    ["name", "add_note"]
+    ["name", "description"]
   end
 
   def self.ransackable_associations(auth_object = nil)

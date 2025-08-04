@@ -120,7 +120,7 @@ class CafedrasController < ApplicationController
     # Only allow a list of trusted parameters through.
     def cafedra_params
       params.require(:cafedra).permit(
-        :name, :add_note, :faculty_id
+        :name, :description, :faculty_id
       )
     end
 end

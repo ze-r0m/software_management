@@ -30,7 +30,7 @@
             <li>
               <i class="bi bi-card-checklist me-2 text-primary"></i>
               <strong>Примечания:</strong>
-              <%= @faculty.add_note.presence || content_tag(:em, 'Нет') %>
+              <%= @faculty.description.presence || content_tag(:em, 'Нет') %>
             </li>
           </ul>
         </div>

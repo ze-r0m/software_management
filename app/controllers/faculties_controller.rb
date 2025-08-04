@@ -14,10 +14,10 @@ class FacultiesController < ApplicationController
         flash.now[:alert] = "Фильтр 'Название факультета' слишком длинный<br>"
         params[:q].delete(:name_cont) # или обрезать строку
       end
-      if params[:q][:add_note_cont].present? && params[:q][:add_note_cont].length > 255
+      if params[:q][:description_cont].present? && params[:q][:description_cont].length > 255
         flash.now[:alert] ||= []
         flash.now[:alert] << "Фильтр 'Примечания' слишком длинный"
-        params[:q].delete(:add_note_cont)
+        params[:q].delete(:description_cont)
       end
     end
 
@@ -123,7 +123,7 @@ class FacultiesController < ApplicationController
 
     def faculty_params
       params.require(:faculty).permit(
-        :name, :add_note
+        :name, :description
       )
     end
 

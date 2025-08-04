@@ -35,11 +35,11 @@ ru:
         usage_basis: "Основание использования"
       cafedra:
         name: "Название кафедры"
-        add_note: "Дополнительная заметка"
+        description: "Дополнительная заметка"
         faculty: "Факультет"
       faculty:
         name: "Название факультета"
-        add_note: "Дополнительная заметка"
+        description: "Дополнительная заметка"
       comp_class:
         aud_number: "Номер аудитории"
         count_seat: "Количество мест"
@@ -49,7 +49,7 @@ ru:
         projector: "Проектор"
         panel: "Панель"
         ch_board: "Доска"
-        add_note: "Дополнительная заметка"
+        description: "Дополнительная заметка"
         cafedra_id: "Кафедра"
 
   flash:
