@@ -117,7 +117,7 @@ class CompClassesController < ApplicationController
       params.require(:comp_class).permit(
         :aud_number, :count_seat, :count_comp_seat,
         :count_comp, :spec_purpose, :projector, :panel,
-        :ch_board, :add_note, :cafedra_id
+        :ch_board, :description, :cafedra_id
       )
     end
 end

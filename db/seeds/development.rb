@@ -55,7 +55,7 @@ faculties = [
 ]
 
 faculties.each do |short, full|
-  Faculty.find_or_create_by!(name: short, add_note: full)
+  Faculty.find_or_create_by!(name: short, description: full)
 end
 
 puts "Создание кафедр..."
@@ -88,7 +88,7 @@ cafedras_data.each do |abbr, full_name, faculty_code|
   if faculty
     Cafedra.find_or_create_by!(
       name: abbr,
-      add_note: full_name,
+      description: full_name,
       faculty_id: faculty.id
     )
   else

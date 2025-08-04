@@ -30,7 +30,7 @@
             <li>
               <i class="bi bi-card-text me-2 text-primary"></i>
               <strong>Примечания:</strong>
-              <%= @cafedra.add_note.presence || content_tag(:em, 'Нет') %>
+              <%= @cafedra.description.presence || content_tag(:em, 'Нет') %>
             </li>
           </ul>
         </div>

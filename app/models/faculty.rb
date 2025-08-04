@@ -4,12 +4,12 @@ class Faculty < ApplicationRecord
             presence: { message: "не может быть пустым" },
             uniqueness: { message: "уже существует" },
             length: { maximum: 255, message: "не может быть длиннее %{count} символов" }
-  validates :add_note,
+  validates :description,
             length: { maximum: 255, message: "не может быть длиннее %{count} символов" }
 
   # Разрешаем Ransack искать по этим полям
   def self.ransackable_attributes(auth_object = nil)
-    ["name", "add_note"]
+    ["name", "description"]
   end
 
   # Мягкое удаление

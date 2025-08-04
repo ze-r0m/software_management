@@ -9,7 +9,7 @@ class CreateCompClasses < ActiveRecord::Migration[8.0]
       t.boolean :projector
       t.boolean :panel
       t.boolean :ch_board
-      t.text :add_note
+      t.text :description
       t.references :cafedra, null: false, foreign_key: true
 
       t.timestamps
