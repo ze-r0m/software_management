@@ -146,7 +146,7 @@ class InstalledSoftwaresController < ApplicationController
 
     params.require(:installed_software).permit(
       :name, :note, :version, :is_server,
-      :start_date, :finish_date, :key_holder,
+      :start_date, :finish_date, :keyholder,
       :quantity, :usage_basis, purpose: [],
       comp_class_ids: []
     )
