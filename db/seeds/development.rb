@@ -1,7 +1,5 @@
 # Очищаем данные в правильном порядке (от зависимых к родителям)
-RequestSoftAud.delete_all
 ClassSoftware.delete_all
-RequestSoft.delete_all
 CompClass.delete_all
 InstalledSoftware.delete_all
 Cafedra.delete_all
