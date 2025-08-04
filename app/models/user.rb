@@ -21,6 +21,18 @@ class User < ApplicationRecord
     end
   end
 
+  def admin?
+    role&.name == 'admin'
+  end
+
+  def moderator?
+    role&.name == 'moderator'
+  end
+
+  def admin_or_moderator?
+    admin? || moderator?
+  end
+
   private
 
   # Проверка пароля только если нужно сменить пароль (change_password == '1')

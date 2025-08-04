@@ -57,6 +57,9 @@ docker compose -f docker-compose.prod.yml --env-file .env.production -p software
 
 
 - [ ] !Docker.prod
+- [X] Упростить проверку на роль, перенести в метод юзера
+- [ ] bug  не вносится держатель ключа в ПО
+
 - [X] seed prod
 - [ ] Алерт переход при отсутствии записи в контролере (факультеты, кафедры, аудитории)
 - [X] Soft delete
