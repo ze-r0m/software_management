@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   include Pundit
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
 
   private
   def user_not_authorized
@@ -30,6 +31,27 @@ class ApplicationController < ActionController::Base
     response.headers['X-Flash-Alert'] = flash[:alert] if flash[:alert]
     response.headers['X-Flash-Error'] = flash[:error] if flash[:error]
     flash.discard # очищает flash после отправки
+  end
+
+  def handle_not_found
+    flash[:alert] = "Запись не найдена или была удалена"
+
+    fallback = case controller_name
+               when "installed_softwares"
+                 installed_softwares_path
+               when "comp_classes"
+                 comp_classes_path
+               when "cafedras"
+                 cafedras_path
+               when "faculties"
+                 faculties_path
+               when "users"
+                 users_path
+               else
+                 root_path
+               end
+
+    redirect_back fallback_location: fallback
   end
 
 end
