@@ -1,30 +1,40 @@
 FROM ruby:3.4.2
 
-WORKDIR /rails
+WORKDIR /app
 
+# Установим зависимости
 RUN apt-get update -qq && apt-get install -y \
   build-essential \
-  libpq-dev \
   default-mysql-client \
-  nodejs \
   curl \
-  yarn \
+  nodejs \
+  npm \
   && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем нужную версию bundler
+# Устанавливаем нужный bundler
 RUN gem install bundler -v 2.6.6
 
-# Устанавливаем Node.js через n
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs
-
-# Копируем и устанавливаем зависимости
+# Копируем только Gemfile и устанавливаем гемы
 COPY Gemfile Gemfile.lock ./
-RUN bundle install
+RUN bundle install --without development test
 
-# Копируем весь проект
+# Копируем всё приложение
 COPY . .
 
-# Удалим PID перед запуском
-CMD ["bash", "-c", "rm -f tmp/pids/server.pid"]
-CMD ["bash", "-c", "rm -f bin/dev"]
+# Копируем entrypoint и делаем его исполняемым
+COPY entrypoint.sh /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/entrypoint.sh
+
+ARG SECRET_KEY_BASE
+ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
+
+# Предкомпилируем ассеты
+RUN RAILS_ENV=production bundle exec rake assets:precompile
+
+# Удалим pid-файл и запустим сервер
+#CMD bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -e production -b 0.0.0.0"
+
+# Добавляем entrypoint, который выполнится при старте контейнера
+ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

@@ -3,28 +3,37 @@ version: '3.9'
 services:
   db:
     image: mysql:8.0
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 123
-      MYSQL_DATABASE: software_management_development
-    ports:
-      - "3306:3306"
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"  # в проде — можно убрать
 
   web:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/rails:cached
-      - bundle_cache:/usr/local/bundle
-    ports:
-      - "3000:3000"
-    environment:
-      RAILS_ENV: development
+      args:
+        SECRET_KEY_BASE: ${SECRET_KEY_BASE}
     depends_on:
       - db
-    command: bash -c "bin/rails server -b 0.0.0.0"
+    environment:
+      RAILS_ENV: production
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_HOST: db
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+    ports:
+      - "3000:3000"
+    volumes:
+      - bundle_cache:/usr/local/bundle
+    command: bundle exec rails s -b 0.0.0.0 -e production
 
 volumes:
   db_data:

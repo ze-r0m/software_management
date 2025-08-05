@@ -12,7 +12,9 @@
 В качестве бд для системы используется MySQL 8  
 Схема на этапе проектирования системы:
 ![схема данных учет ПО.png](%D1%81%D1%85%D0%B5%D0%BC%D0%B0%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20%D1%83%D1%87%D0%B5%D1%82%20%D0%9F%D0%9E.png)
+
 Эту схему считать приоритетной:
+
 ![схема бд.png](%D1%81%D1%85%D0%B5%D0%BC%D0%B0%20%D0%B1%D0%B4.png)
 В системе уже имеется сидер с набором "мок" данных, 
 созданием суперадмина, нескольким записями о факультетах, кафедрах, компьютерных классах, и программного обеспечения.  
@@ -22,41 +24,28 @@
 
 * Доступ к системе  
   При выполнении сидера создается супер админ, с помощью этих учетных данных выполняется доступ к системе
-        username: superadmin  
-        email: admin@example.com  
-        password: changeme123  
+      username: superadmin  
+      email: admin@example.com  
+      password: changeme123  
 
 
 * Вход в контейнер
-        docker exec -it software_management-web-1 bash
+      docker exec -it software_management-web-1 bash
+      docker exec -it software_management-db-1 bash
+
 * Билд продакшена 
-  *     docker compose -f docker-compose.prod.yml build
-
-
-docker compose -f docker-compose.prod.yml -p software_management_prod up -d
-
-docker compose -f docker-compose.prod.yml -p software_management_prod --env-file .env.production -p software_prod up --build
-docker compose -f docker-compose.prod.yml --env-file .env.production -p software_prod exec web rails db:migrate
-
-
-docker compose -f docker-compose.prod.yml -p software_management_prod --env-file .env.production -p software_prod up -d --build
-
-docker compose -f docker-compose.prod.yml --env-file .env.production -p software_prod up -d --build
-docker compose -f docker-compose.prod.yml --env-file .env.production -p software_prod exec web rails db:migrate
-
-docker compose -f docker-compose.prod.yml -p software_management_prod --env-file .env.production -p software_prod exec web rails db:migrate
-docker compose -f docker-compose.prod.yml -p software_management_prod --env-file .env.production -p software_prod exec web rails db:seed
-
-подключение к бд
-docker compose -f docker-compose.prod.yml --env-file .env.production -p software_prod exec db mysql -u root -p
+      docker compose --env-file .env up --build   
 
 
 ### Выявленые баги и задачи к выполнению
 
 
+* На осень
+- Переезд на postgres
+- логика учета кол-ва по внутри аудитории(подзапрос с внесением кол-ва в class_softwares)
+- сортировки
 
-
-- [ ] !Docker.prod
+- [X] !Docker.prod
 - [X] Упростить проверку на роль, перенести в метод юзера
 - [X] bug  не вносится держатель ключа в ПО
 
@@ -105,7 +94,6 @@ docker compose -f docker-compose.prod.yml --env-file .env.production -p software
 - [ ] ...Кнопка скрытия и показа фильтров в шапке таблицы
 - [X] !При переходе из Аудиторий в ПО(по выбранным аудиториям) - не показывать в поле фильтрации выбранные аудитории. Там вообще по кнопке не правильная ссылка формируется
 - [ ] Вопрос - второй заголовок(фильтры) и прокрутка таблицы в ширину div class="table-responsive"
-- [ ] Фильтрация связанных данных через политики доступа
 
 - [X] добавить лого управления на страницу
 - [ ] Создание логики и проектирование раздела "Заявки"
