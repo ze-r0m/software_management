@@ -13,11 +13,11 @@ echo "✅ Database is up! Running migrations..."
 
 rm -f tmp/pids/server.pid
 
-echo "⏳ Running migrations..."
-bundle exec rails db:migrate
+#echo "⏳ Running migrations..."
+#bundle exec rails db:migrate
 
-echo "⏳ Running seed data..."
-bundle exec rails db:seed
+#echo "⏳ Running seed data..."
+#bundle exec rails db:seed
 
 echo "🚀 Starting server..."
 exec "$@"

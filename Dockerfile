@@ -21,10 +21,6 @@ RUN bundle install --without development test
 # Копируем всё приложение
 COPY . .
 
-# Копируем entrypoint и делаем его исполняемым
-COPY entrypoint.sh /usr/bin/entrypoint.sh
-RUN chmod +x /usr/bin/entrypoint.sh
-
 ARG SECRET_KEY_BASE
 ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
 
@@ -33,8 +29,5 @@ RUN RAILS_ENV=production bundle exec rake assets:precompile
 
 # Удалим pid-файл и запустим сервер
 #CMD bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -e production -b 0.0.0.0"
-
-# Добавляем entrypoint, который выполнится при старте контейнера
-ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

@@ -36,6 +36,10 @@
 * Билд продакшена 
       docker compose --env-file .env up --build   
 
+* Загрузка данных в проде для тестирования
+      RAILS_ENV=production bundle exec rails runner 'load(Rails.root.join("db/seeds/development.rb"))'
+
+
 
 ### Выявленые баги и задачи к выполнению
 
