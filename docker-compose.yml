@@ -10,16 +10,14 @@ services:
       MYSQL_USER: ${DATABASE_USER}
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
-      - db_data:/var/lib/mysql
+      - ./storage/mysql_data:/var/lib/mysql/
     ports:
-      - "3306:3306"  # в проде — можно убрать
+      - "3306:3306"
 
   web:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        SECRET_KEY_BASE: ${SECRET_KEY_BASE}
     depends_on:
       - db
     environment:
@@ -32,9 +30,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - bundle_cache:/usr/local/bundle
+      - .:/app
+    entrypoint: /app/entrypoint.sh
     command: bundle exec rails s -b 0.0.0.0 -e production
 
-volumes:
-  db_data:
-  bundle_cache:

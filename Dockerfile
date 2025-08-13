@@ -21,11 +21,8 @@ RUN bundle install --without development test
 # Копируем всё приложение
 COPY . .
 
-ARG SECRET_KEY_BASE
-ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
-
-# Предкомпилируем ассеты
-RUN RAILS_ENV=production bundle exec rake assets:precompile
+# Предкомпилируем ассеты с фиктивным ключом
+RUN SECRET_KEY_BASE_DUMMY=1 RAILS_ENV=production bundle exec rake assets:precompile
 
 # Удалим pid-файл и запустим сервер
 #CMD bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -e production -b 0.0.0.0"
