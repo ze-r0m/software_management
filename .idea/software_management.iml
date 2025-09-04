@@ -26,6 +26,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/cache" />
       <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/codeStyles" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/inspectionProfiles" />
+      <excludeFolder url="file://$MODULE_DIR$/storage/mysql_data" />
     </content>
     <orderEntry type="jdk" jdkName="ruby-3.4.4-p34" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

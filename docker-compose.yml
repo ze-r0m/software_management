@@ -29,8 +29,6 @@ services:
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
     ports:
       - "3000:3000"
-    volumes:
-      - .:/app
     entrypoint: /app/entrypoint.sh
     command: bundle exec rails s -b 0.0.0.0 -e production
 
