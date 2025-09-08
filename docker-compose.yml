@@ -3,16 +3,14 @@ version: '3.9'
 services:
   db:
     image: mysql:8.0
-    restart: always
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_NAME}
       MYSQL_USER: ${DATABASE_USER}
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - ./storage/db_data:/var/lib/mysql/
-    ports:
-      - "3306:3306"
 
   web:
     build:
@@ -20,6 +18,7 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - db
+    restart: unless-stopped
     environment:
       RAILS_ENV: production
       DATABASE_NAME: ${DATABASE_NAME}
@@ -28,7 +27,6 @@ services:
       DATABASE_HOST: db
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
     ports:
-      - "3000:3000"
+      - "${WEB_PORT}:3000"
     entrypoint: /app/entrypoint.sh
     command: bundle exec rails s -b 0.0.0.0 -e production
-

@@ -13,18 +13,19 @@ echo "✅ Database is up!"
 
 rm -f tmp/pids/server.pid
 
-# Проверяем, есть ли таблицы в БД
-TABLES_EXIST=$(mysql -h"$DATABASE_HOST" -u"$DATABASE_USER" -p"$DATABASE_PASSWORD" -D "$DATABASE_NAME" -e "SHOW TABLES;" | wc -l)
+# Проверяем наличие служебной таблицы schema_migrations
+TABLE_EXISTS=$(mysql -h"$DATABASE_HOST" -u"$DATABASE_USER" -p"$DATABASE_PASSWORD" \
+  -D "$DATABASE_NAME" -e "SHOW TABLES LIKE 'schema_migrations';" | wc -l)
 
-if [ "$TABLES_EXIST" -le 1 ]; then
-  # БД пустая → первый запуск
-  echo "⏳ Running migrations and seed data for first time..."
-  bundle exec rails db:setup
+if [ "$TABLE_EXISTS" -eq 0 ]; then
+  echo "⏳ First run: creating DB, running migrations and seeding..."
+  bundle exec rails db:create
+  bundle exec rails db:migrate
+  bundle exec rails db:seed
 else
-  # БД уже есть → просто миграции
-  echo "⏳ Running migrations..."
+  echo "⏳ Updating DB schema (migrations)..."
   bundle exec rails db:migrate
 fi
 
-echo "🚀 Starting server..."
+echo "🚀 Starting Rails..."
 exec "$@"
